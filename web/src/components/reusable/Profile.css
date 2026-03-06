@@ -1,0 +1,137 @@
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.profile-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 40px;
+}
+
+.profile-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 20px;
+}
+
+.profile-header h2 {
+  color: #1e293b;
+  margin: 0;
+}
+
+.profile-header p {
+  color: #64748b;
+  margin-top: 5px;
+}
+
+.form-row {
+  margin-bottom: 20px;
+}
+
+.form-row.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.read-only-input {
+  background-color: #f8fafc;
+  cursor: not-allowed;
+  color: #64748b;
+}
+
+.btn-save {
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #2563eb;
+}
+
+.read-only-view {
+  background-color: #f8fafc !important;
+  border-color: transparent !important;
+  color: #475569;
+  cursor: default;
+}
+
+.edit-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-edit {
+  padding: 12px 24px;
+  background-color: #1e293b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-cancel {
+  padding: 12px 24px;
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-edit:hover { 
+  background-color: #334155; 
+}
+
+.btn-cancel:hover { 
+  background-color: #e2e8f0; 
+}
+
+.profile-header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.avatar-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.profile-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%; 
+  object-fit: cover;
+  border: 3px solid #007bff; 
+}
+
+.avatar-overlay {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.avatar-upload-btn {
+  background: #007bff;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.avatar-upload-btn:hover {
+  background: #0056b3;
+}
