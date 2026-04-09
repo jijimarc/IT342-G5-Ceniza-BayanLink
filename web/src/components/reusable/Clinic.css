@@ -1,0 +1,85 @@
+/* --- Staff Grid Styles --- */
+.staff-grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.staff-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 140px;
+  padding: 20px 15px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.staff-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border-color: #cbd5e1;
+}
+
+.staff-icon-wrapper {
+  width: 70px;
+  height: 70px;
+  background-color: #e2e8f0;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.staff-svg {
+  width: 40px;
+  height: 40px;
+  fill: #475569;
+}
+
+.staff-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.staff-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 4px;
+}
+
+.staff-title {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* --- Services List Styles --- */
+.services-list-container {
+  background-color: #f8fafc;
+  border: 1px dashed #000000;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.services-list {
+  margin: 0;
+  padding-left: 20px;
+  color: #475569;
+}
+
+.services-list li {
+  margin-bottom: 12px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.services-list li:last-child {
+  margin-bottom: 0;
+}

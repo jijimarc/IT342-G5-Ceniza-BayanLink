@@ -1,0 +1,98 @@
+/* --- Schedule Form Layout --- */
+.schedule-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.schedule-top-grid {
+  display: flex;
+  gap: 30px;
+}
+
+.schedule-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* --- Interactive Time Slots --- */
+.time-slots-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  background-color: #d0d6de;
+  padding: 16px;
+  border-radius: 6px;
+  min-height: 150px;
+  align-content: start;
+}
+
+.time-slot-btn {
+  background-color: #fcfdff;
+  border: 1px solid #cbd5e1;
+  color: #5e5959;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.time-slot-btn:hover {
+  border-color: #94a3b8;
+  background-color: #f8fafc;
+}
+
+.time-slot-btn.active {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.25);
+}
+
+/* --- Large Date Picker --- */
+.date-picker-lg {
+  padding: 14px 16px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  color: #1e293b;
+  cursor: pointer;
+}
+
+.date-picker-lg::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  transform: scale(1.2);
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.date-picker-lg::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+/* --- Summary Box --- */
+.schedule-bottom-section {
+  margin-top: 10px;
+}
+
+.summary-box {
+  background-color: #d0d6de;
+  border: 1px solid #cbd5e1;
+  min-height: 160px;
+  color: #030303;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  resize: none;
+  cursor: default;
+}
+
+.summary-box:focus {
+  /* Prevent the blue outline since it is read-only */
+  outline: none;
+  border-color: #cbd5e1; 
+  background-color: #e2e8f0;
+}
