@@ -1,8 +1,12 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
+// 1. SINGLETON INSTANCE HOLDER
+// We create a single context reference that the entire application will share.
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  // 2. SINGLE INSTANCE STATE
+  // These states represent the single source of truth for authentication.
   const [user, setUser] = useState(() => {
     const savedUser = localStorage.getItem('user');
     return savedUser ? JSON.parse(savedUser) : null;
@@ -40,7 +44,7 @@ export const AuthProvider = ({ children }) => {
         const userData = {
           userId: data.userId,
           email: credentials.userEmail,
-          role: 'admin',
+          role: 'admin', // You might want to update this to pull the actual role from 'data'
           isGuest: false
         };
 
@@ -74,4 +78,7 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
+// 3. GLOBAL ACCESS POINT
+// This hook is the only way components can interact with the Singleton instance.
+// It guarantees every component gets the exact same authentication data.
 export const useAuth = () => useContext(AuthContext);
