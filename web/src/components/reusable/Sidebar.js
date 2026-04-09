@@ -12,8 +12,6 @@ import { useAuth } from '../AuthContext';
  * this component, triggering a re-render to update the navigation links dynamically.
  */
 const Sidebar = ({ onLogout }) => {
-  // 1. SUBSCRIBING TO THE SUBJECT
-  // By calling useAuth(), this component registers itself as an observer.
   const { user } = useAuth();
 
   return (
@@ -25,11 +23,8 @@ const Sidebar = ({ onLogout }) => {
       
       <nav className="sidebar-nav">
         
-        {/* 2. REACTING TO STATE CHANGES */}
-        {/* The UI dynamically updates based on the observed 'user' state. */}
         {user ? (
           <>
-            {/* Links visible only to logged-in users */}
             <NavLink to="/dashboard" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
               <span className="nav-icon"></span>
               Dashboard
@@ -39,15 +34,21 @@ const Sidebar = ({ onLogout }) => {
               <span className="nav-icon"></span>
               Profile
             </NavLink>
+            
+            <NavLink to="/clinic" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+              <span className="nav-icon"></span>
+              Clinic
+            </NavLink>
 
-            {/* Example of reacting to specific roles within the observed state */}
-            {user.role === 'OFFICIAL' && (
-               <NavLink to="/admin-panel" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-                 <span className="nav-icon"></span>
-                 Admin Panel
-               </NavLink>
-            )}
+            <NavLink to="/schedules" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+              <span className="nav-icon"></span>
+              Schedules
+            </NavLink>
 
+            <NavLink to="/documents" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+              <span className="nav-icon"></span>
+              Documents
+            </NavLink>
             <div className="nav-section-label">Services</div>
 
             <NavLink 
@@ -63,7 +64,6 @@ const Sidebar = ({ onLogout }) => {
             </NavLink>
           </>
         ) : (
-          /* Links visible to unauthenticated users */
           <NavLink to="/login" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
             <span className="nav-icon"></span>
             Login / Register

@@ -4,6 +4,9 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import ProfilePage from './components/ProfilePage';
+import ClinicPage from './components/ClinicPage';
+import DocumentsPage from './components/DocumentsPage';
+import SchedulesPage from './components/SchedulesPage';
 import { AuthProvider } from './components/AuthContext';
 
 function App() {
@@ -20,6 +23,12 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           
           <Route path="/profile" element={<ProfilePage />} />
+
+          <Route path="/clinic" element={<ClinicPage />} />
+
+          <Route path="/documents" element={<DocumentsPage />} />
+          
+          <Route path="/schedules" element={<SchedulesPage />} />
           
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>

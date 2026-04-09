@@ -21,7 +21,7 @@ const Login = () => {
           navigate('/dashboard');
         }, 1500);
     } else {
-      setToast({ message: 'Login success!', type: 'success' });
+      setToast({ message: result.message || 'Login failed!', type: 'error' });
     }
   };
 
