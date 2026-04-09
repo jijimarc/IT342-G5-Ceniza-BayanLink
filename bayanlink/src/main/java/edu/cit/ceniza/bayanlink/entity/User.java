@@ -31,6 +31,13 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role userRole;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Resident residentProfile;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Official officialProfile;
+
     @Column(name = "profile_image", columnDefinition = "TEXT")
     private String userProfileImage;
 

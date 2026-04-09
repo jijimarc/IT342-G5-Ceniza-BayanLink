@@ -34,7 +34,9 @@ public class AuthenticationService {
         response.put("token", token);
         response.put("userId", user.getUserId());
         response.put("email", user.getUserEmail());
-
+        response.put("role", user.getUserRole());
+        response.put("firstname", user.getUserFirstname());
+        response.put("lastname", user.getUserLastname());
         return response;
     }
 }

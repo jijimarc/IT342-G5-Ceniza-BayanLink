@@ -18,13 +18,13 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (!userRepository.existsByUserEmail("captain@bayanlink.com")) {
+        if (!userRepository.existsByUserEmail("captain@gmail.com")) {
 
             User officialUser = new User();
-            officialUser.setUserEmail("captain@bayanlink.com");
+            officialUser.setUserEmail("captain@gmail.com");
             officialUser.setUserFirstname("Kapitan");
             officialUser.setUserLastname("Dela Cruz");
-            officialUser.setUserPassword(passwordEncoder.encode("Admin123!"));
+            officialUser.setUserPassword(passwordEncoder.encode("jianmarc!"));
             officialUser.setUserRole(Role.OFFICIAL);
 
             Official officialProfile = new Official();
