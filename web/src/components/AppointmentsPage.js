@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css'; // Reuses main layout styling
-import './reusable/Schedules.css'; // Specific styling for this page in the reusable folder
+import './reusable/Dashboard.css'; 
+import './reusable/Appointments.css'; 
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import Toast from './reusable/Toast';
 
-const Schedules = () => {
+const AppointmentsPage = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
   const [toast, setToast] = useState({ message: '', type: '' });
-
+  const today = new Date().toISOString().split('T')[0];
   const displayName = user?.isGuest ? "Guest User" : (user?.fullname || user?.email || "User");
-
-  // Scheduling State
+  const [summary, setSummary] = useState('');
   const [formData, setFormData] = useState({
     service: '',
     date: '',
@@ -21,15 +20,12 @@ const Schedules = () => {
     notes: ''
   });
 
-  const [summary, setSummary] = useState('');
+  
 
-  // Available time slots (Mock data)
-  const availableSlots = [
-    "08:00 AM", "09:00 AM", "10:30 AM", 
-    "01:00 PM", "02:30 PM", "04:00 PM"
-  ];
+  // Replace the single array with these two
+  const morningSlots = ["08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM"];
+  const afternoonSlots = ["01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"];
 
-  // Auto-update the summary when fields change
   useEffect(() => {
     if (formData.service || formData.date || formData.timeSlot) {
       setSummary(
@@ -63,14 +59,43 @@ const Schedules = () => {
     setFormData({ service: '', date: '', timeSlot: '', notes: '' });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.service || !formData.date || !formData.timeSlot) {
       setToast({ message: 'Please select a service, date, and time slot.', type: 'error' });
       return;
     }
-    setToast({ message: 'Schedule requested successfully!', type: 'success' });
-    handleClear();
+
+    const requestPayload = {
+      userId: user.userId,
+      serviceType: formData.service,
+      appointmentDate: formData.date,
+      timeSlot: formData.timeSlot,
+      notes: formData.notes
+    };
+
+    try {
+      const response = await fetch('http://localhost:8080/api/appointments/book', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(requestPayload)
+      });
+
+      if (response.ok) {
+        const savedAppointment = await response.json();
+        setToast({ message: `Appointment booked! Ref: ${savedAppointment.referenceNumber}`, type: 'success' });
+        handleClear();
+      } else {
+        const errorMessage = await response.text();
+        setToast({ message: `Failed to book: ${errorMessage}`, type: 'error' });
+      }
+    } catch (error) {
+      console.error("Booking error:", error);
+      setToast({ message: 'Network error occurred.', type: 'error' });
+    }
   };
 
   return (
@@ -96,10 +121,8 @@ const Schedules = () => {
             
             <form className="schedule-form" onSubmit={handleSubmit}>
               
-              {/* Top Section: Split Layout */}
               <div className="schedule-top-grid">
                 
-                {/* Left Column: Service & Time */}
                 <div className="schedule-col">
                   <div className="form-group">
                     <label>Choose service</label>
@@ -119,22 +142,44 @@ const Schedules = () => {
 
                   <div className="form-group h-100">
                     <label>Available Time Slots</label>
-                    <div className="time-slots-container">
-                      {availableSlots.map((slot, index) => (
-                        <button
-                          key={index}
-                          type="button"
-                          className={`time-slot-btn ${formData.timeSlot === slot ? 'active' : ''}`}
-                          onClick={() => handleTimeSelect(slot)}
-                        >
-                          {slot}
-                        </button>
-                      ))}
+                    
+                    {/* Morning Block */}
+                    <div className="time-group" style={{ marginBottom: '12px' }}>
+                      <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '8px', fontWeight: '600' }}>MORNING</p>
+                      <div className="time-slots-container">
+                        {morningSlots.map((slot, index) => (
+                          <button
+                            key={`morning-${index}`}
+                            type="button"
+                            className={`time-slot-btn ${formData.timeSlot === slot ? 'active' : ''}`}
+                            onClick={() => handleTimeSelect(slot)}
+                          >
+                            {slot}
+                          </button>
+                        ))}
+                      </div>
                     </div>
+
+                    {/* Afternoon Block */}
+                    <div className="time-group">
+                      <p style={{ fontSize: '0.8rem', color: '#64748b', marginBottom: '8px', fontWeight: '600' }}>AFTERNOON</p>
+                      <div className="time-slots-container">
+                        {afternoonSlots.map((slot, index) => (
+                          <button
+                            key={`afternoon-${index}`}
+                            type="button"
+                            className={`time-slot-btn ${formData.timeSlot === slot ? 'active' : ''}`}
+                            onClick={() => handleTimeSelect(slot)}
+                          >
+                            {slot}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
                   </div>
                 </div>
 
-                {/* Right Column: Date Picker */}
                 <div className="schedule-col">
                   <div className="form-group">
                     <label>Pick a Date</label>
@@ -144,10 +189,10 @@ const Schedules = () => {
                       className="form-control date-picker-lg"
                       value={formData.date}
                       onChange={handleChange}
+                      min={today}
                     />
                   </div>
                   
-                  {/* Optional: Add notes to the right column to balance the layout */}
                   <div className="form-group h-100" style={{ marginTop: '20px' }}>
                      <label>Additional Notes (Optional)</label>
                      <textarea 
@@ -161,7 +206,6 @@ const Schedules = () => {
                 </div>
               </div>
 
-              {/* Bottom Section: Summary */}
               <div className="schedule-bottom-section">
                 <div className="form-group">
                   <label>Summary</label>
@@ -174,7 +218,6 @@ const Schedules = () => {
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="form-actions">
                 <button type="button" className="btn-remove" onClick={handleClear}>Remove</button>
                 <button type="submit" className="btn-submit">Submit</button>
@@ -194,4 +237,4 @@ const Schedules = () => {
   );
 };
 
-export default Schedules;
+export default AppointmentsPage;

@@ -23,7 +23,7 @@ public class OfficialController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<OfficialDTO> getOfficialProfile(@PathVariable Integer userId) {
+    public ResponseEntity<OfficialDTO> getOfficialProfile(@PathVariable("userId") Integer userId) {
         OfficialDTO profile = officialService.getOfficialByUserId(userId);
         return ResponseEntity.ok(profile);
     }

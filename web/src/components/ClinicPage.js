@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './reusable/Sidebar';
 import './reusable/Dashboard.css'; 
 import './reusable/Clinic.css'; 
@@ -9,9 +9,45 @@ import { StaffIcon } from './reusable/Icons';
 
 const Clinic = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth(); 
   const [toast, setToast] = useState({ message: '', type: '' });
+  const [healthStaff, setHealthStaff] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const displayName = user?.isGuest ? "Guest User" : (user?.fullname || user?.email || "User");
+
+  useEffect(() => {
+    const fetchHealthStaff = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/officials/directory', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const directory = await response.json();
+          const medicalKeywords = ['physician', 'nurse', 'pediatrician', 'health', 'doctor'];
+          const filteredStaff = directory.filter(official => 
+            medicalKeywords.some(keyword => 
+              official.positionTitle?.toLowerCase().includes(keyword)
+            )
+          );
+          
+          setHealthStaff(filteredStaff);
+        } else {
+          console.error("Failed to fetch directory");
+        }
+      } catch (error) {
+        console.error("Network error:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    if (token) {
+      fetchHealthStaff();
+    }
+  }, [token]);
 
   const handleLogoutClick = () => {
     setToast({ message: 'Logging out successfully...', type: 'info' });
@@ -31,7 +67,6 @@ const Clinic = () => {
             <h2>Clinic</h2>
           </div>
           
-          {/* Using your updated clean profile section (no avatar circle) */}
           <div className="profile-section">
             <div className="profile-details" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
               <span className="profile-name">{displayName}</span>
@@ -42,48 +77,30 @@ const Clinic = () => {
 
         <section className="dashboard-body">
           
-          {/* Staff Present Section */}
           <div className="dashboard-card">
             <h3 className="card-title">Staff Present</h3>
-            <div className="staff-grid">
-              
-              {/* Staff Member 1 */}
-              <div className="staff-card">
-                <div className="staff-icon-wrapper">
-                  <StaffIcon />
-                </div>
-                <div className="staff-info">
-                  <span className="staff-name">Dr. Reyes</span>
-                  <span className="staff-title">Head Physician</span>
-                </div>
+            
+            {isLoading ? (
+              <p style={{ color: '#64748b', fontSize: '0.9rem' }}>Loading clinic staff...</p>
+            ) : healthStaff.length > 0 ? (
+              <div className="staff-grid">
+                {healthStaff.map((staff, index) => (
+                  <div className="staff-card" key={index}>
+                    <div className="staff-icon-wrapper">
+                      <StaffIcon />
+                    </div>
+                    <div className="staff-info">
+                      <span className="staff-name">{staff.fullName}</span>
+                      <span className="staff-title">{staff.positionTitle}</span>
+                    </div>
+                  </div>
+                ))}
               </div>
-
-              {/* Staff Member 2 */}
-              <div className="staff-card">
-                <div className="staff-icon-wrapper">
-                  <StaffIcon />
-                </div>
-                <div className="staff-info">
-                  <span className="staff-name">Nurse Santos</span>
-                  <span className="staff-title">Registered Nurse</span>
-                </div>
-              </div>
-
-              {/* Staff Member 3 */}
-              <div className="staff-card">
-                <div className="staff-icon-wrapper">
-                  <StaffIcon />
-                </div>
-                <div className="staff-info">
-                  <span className="staff-name">Dr. Lim</span>
-                  <span className="staff-title">Pediatrician</span>
-                </div>
-              </div>
-
-            </div>
+            ) : (
+              <p style={{ color: '#64748b', fontSize: '0.9rem' }}>No medical staff are currently listed.</p>
+            )}
           </div>
 
-          {/* Services Available Section */}
           <div className="dashboard-card">
             <h3 className="card-title">Services Available</h3>
             <div className="services-list-container">

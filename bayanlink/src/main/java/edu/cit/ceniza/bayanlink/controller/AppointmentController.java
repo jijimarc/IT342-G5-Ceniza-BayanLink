@@ -24,9 +24,9 @@ public class AppointmentController {
         return ResponseEntity.ok(savedAppointment);
     }
 
-    @GetMapping("/resident/{residentId}")
-    public ResponseEntity<List<Appointment>> getResidentAppointments(@PathVariable Integer residentId) {
-        List<Appointment> history = appointmentService.getResidentAppointments(residentId);
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Appointment>> getResidentAppointments(@PathVariable("userId") Integer userId) {
+        List<Appointment> history = appointmentService.getResidentAppointments(userId);
         return ResponseEntity.ok(history);
     }
     @GetMapping("/pending")

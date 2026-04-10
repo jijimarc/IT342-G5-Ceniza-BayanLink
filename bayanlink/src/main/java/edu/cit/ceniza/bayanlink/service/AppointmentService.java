@@ -23,7 +23,7 @@ public class AppointmentService {
     private final OfficialRepository officialRepository;
 
     public Appointment bookAppointment(AppointmentDTO dto) {
-        Resident resident = residentRepository.findById(dto.getResidentId())
+        Resident resident = residentRepository.findById(dto.getUserId())
                 .orElseThrow(() -> new RuntimeException("Resident not found"));
 
         Appointment newAppointment = new Appointment();
@@ -32,14 +32,16 @@ public class AppointmentService {
         newAppointment.setAppointmentDate(dto.getAppointmentDate());
         newAppointment.setTimeSlot(dto.getTimeSlot());
         newAppointment.setStatus("Pending");
+        newAppointment.setNotes(dto.getNotes());
+
         String refNumber = "APT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
         newAppointment.setReferenceNumber(refNumber);
 
         return appointmentRepository.save(newAppointment);
     }
 
-    public List<Appointment> getResidentAppointments(Integer residentId) {
-        return appointmentRepository.findByResident_ResidentId(residentId);
+    public List<Appointment> getResidentAppointments(Integer userId) {
+        return appointmentRepository.findByResident_UserId(userId);
     }
 
     public List<Appointment> getPendingAppointments() {

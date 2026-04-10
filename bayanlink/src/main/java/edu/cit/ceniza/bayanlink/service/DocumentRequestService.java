@@ -22,7 +22,7 @@ public class DocumentRequestService {
     private final ResidentRepository residentRepository; 
 
     public DocumentRequest handleNewRequest(Integer userId, String fullName, String documentType, 
-                                            String validId, String purpose, MultipartFile idImage) throws Exception {
+                                            String validId, String purpose, String urgencyLevel, MultipartFile idImage) throws Exception {
 
         Resident resident = residentRepository.findByUser_UserId(userId)
                 .orElseThrow(() -> new RuntimeException("Resident profile not found for User ID: " + userId));
@@ -34,7 +34,7 @@ public class DocumentRequestService {
         request.setDocumentType(documentType);
         request.setRequirementURL(requirementUrl);
         request.setRequestDate(LocalDate.now());
-        request.setUrgencyLevel("Standard");
+        request.setUrgencyLevel(urgencyLevel);
         request.setStatus("Pending");
 
         String strategyKey = request.getDocumentType().toUpperCase().replace(" ", "_") + "_STRATEGY";
@@ -44,15 +44,15 @@ public class DocumentRequestService {
             throw new IllegalArgumentException("Unsupported document type: " + request.getDocumentType());
         }
 
+        if (strategy == null) {
+            throw new IllegalArgumentException("Unsupported document type: " + request.getDocumentType());
+        }
         strategy.processRequest(request);
-        double fee = strategy.calculateFee(request.getUrgencyLevel());
-        System.out.println("Processing " + request.getDocumentType() + " with fee: P" + fee);
-
         return documentRequestRepository.save(request);
     }
 
-    public List<DocumentRequest> getResidentRequests(Integer residentId) {
-        return documentRequestRepository.findByResident_ResidentId(residentId);
+    public List<DocumentRequest> getResidentRequests(Integer userId) {
+        return documentRequestRepository.findByResident_UserId(userId);
     }
 
     public List<DocumentRequest> getPendingRequests() {

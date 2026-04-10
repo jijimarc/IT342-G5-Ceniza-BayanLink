@@ -31,8 +31,6 @@ public class OfficialService {
 
     private OfficialDTO convertToDTO(Official official) {
         OfficialDTO dto = new OfficialDTO();
-        dto.setOfficialId(official.getOfficialId());
-        
         dto.setUserId(official.getUser().getUserId());
         dto.setFullName(official.getUser().getUserFirstname() + " " + official.getUser().getUserLastname());
         dto.setUserEmail(official.getUser().getUserEmail());

@@ -34,9 +34,8 @@ const Register = () => {
         setToast({ message: 'User registered successfully!', type: 'success' });
         setTimeout(() => {
           navigate('/login');
-        }, 1500);
+        }, 1000);
       } else {
-        const errorData = await response.json();
         setToast({ message: 'Failed to register user.', type: 'error' });
       }
     } catch (error) {

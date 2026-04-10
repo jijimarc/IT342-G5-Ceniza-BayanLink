@@ -23,7 +23,7 @@ public class ResidentController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<ResidentDTO> getResidentProfile(@PathVariable Integer userId) {
+    public ResponseEntity<ResidentDTO> getResidentProfile(@PathVariable("userId") Integer userId) {
         ResidentDTO profile = residentService.getResidentByUserId(userId);
         return ResponseEntity.ok(profile);
     }

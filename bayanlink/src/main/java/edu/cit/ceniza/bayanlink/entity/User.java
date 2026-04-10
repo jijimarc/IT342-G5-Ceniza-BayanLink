@@ -1,4 +1,5 @@
 package edu.cit.ceniza.bayanlink.entity;
+
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -44,6 +45,7 @@ public class User {
     @Transient
     @Getter(AccessLevel.NONE)
     private int userAge;
+
     public int getAge() {
         if (this.userBirthdate == null) return 0;
         return Period.between(this.userBirthdate, LocalDate.now()).getYears();

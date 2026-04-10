@@ -19,7 +19,7 @@ const Login = () => {
       setToast({ message: 'Login success!', type: 'success' });
         setTimeout(() => {
           navigate('/dashboard');
-        }, 1500);
+        }, 1000);
     } else {
       setToast({ message: result.message || 'Login failed!', type: 'error' });
     }
@@ -31,7 +31,7 @@ const Login = () => {
     setToast({ message: 'Guest login success!', type: 'success' });
       setTimeout(() => {
         navigate('/dashboard');
-      }, 1500);
+      }, 1000);
   };
 
   return (

@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface OfficialRepository extends JpaRepository<Official, Integer> {
     Optional<Official> findByUser_UserId(Integer userId);
-    
 }

@@ -24,16 +24,17 @@ public class DocumentRequestController {
             @RequestParam("documentType") String documentType,
             @RequestParam("validId") String validId,
             @RequestParam("purpose") String purpose,
+            @RequestParam("urgencyLevel") String urgencyLevel,
             @RequestParam("idImage") MultipartFile idImage) {
         
         try {
             DocumentRequest newDoc = documentRequestService.handleNewRequest(
-                userId, fullName, documentType, validId, purpose, idImage
+                userId, fullName, documentType, validId, purpose, urgencyLevel, idImage
             );
             System.out.println("Received userId: " + userId);
-        System.out.println("Received fullName: " + fullName);
-        System.out.println("Received documentType: " + documentType);
-        System.out.println("Received file: " + (idImage != null ? idImage.getOriginalFilename() : "NULL"));
+            System.out.println("Received fullName: " + fullName);
+            System.out.println("Received documentType: " + documentType);
+            System.out.println("Received file: " + idImage.getOriginalFilename());
             return ResponseEntity.ok(newDoc);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to process request: " + e.getMessage());
@@ -42,10 +43,10 @@ public class DocumentRequestController {
         
     }
 
-    @GetMapping("/resident/{residentId}")
-    public ResponseEntity<List<DocumentRequest>> getResidentRequests(@PathVariable Integer residentId)
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<DocumentRequest>> getResidentRequests(@PathVariable("userId") Integer userId)
     {
-        List<DocumentRequest> history = documentRequestService.getResidentRequests(residentId);
+        List<DocumentRequest> history = documentRequestService.getResidentRequests(userId);
         return ResponseEntity.ok(history);
     }
 

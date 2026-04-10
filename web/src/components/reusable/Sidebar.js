@@ -42,7 +42,7 @@ const Sidebar = ({ onLogout }) => {
 
             <NavLink to="/schedules" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
               <span className="nav-icon"></span>
-              Schedules
+              Request Appointment
             </NavLink>
 
             <NavLink to="/documents" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>

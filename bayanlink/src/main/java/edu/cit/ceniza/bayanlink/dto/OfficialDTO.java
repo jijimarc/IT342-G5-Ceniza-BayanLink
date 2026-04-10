@@ -8,12 +8,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OfficialDTO {
-    private Integer officialId;
-    private Integer userId; 
-    
+    private Integer userId;
     private String fullName;
     private String userEmail;
-    
     private String address;
     private String contactNumber;
     private String positionTitle; 

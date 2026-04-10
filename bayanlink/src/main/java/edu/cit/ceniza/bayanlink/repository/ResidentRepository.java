@@ -9,5 +9,4 @@ import java.util.Optional;
 @Repository
 public interface ResidentRepository extends JpaRepository<Resident, Integer> {
     Optional<Resident> findByUser_UserId(Integer userId);
-    
 }

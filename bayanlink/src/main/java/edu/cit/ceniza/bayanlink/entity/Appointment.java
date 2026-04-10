@@ -1,5 +1,7 @@
 package edu.cit.ceniza.bayanlink.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -21,18 +23,22 @@ public class Appointment {
     private String referenceNumber;
 
     private String serviceType;
-
     private LocalDate appointmentDate;
-
-    private LocalTime timeSlot;
-
     private String status;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "hh:mm a")
+    private LocalTime timeSlot;
+
+    @Column(columnDefinition = "TEXT")
+    private String notes;
+
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "resident_id", referencedColumnName = "residentId")
+    @JoinColumn(name = "resident_id")
     private Resident resident;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "managed_by_id", referencedColumnName = "officialId")
+    @JoinColumn(name = "managed_by_id")
     private Official managedBy;
 }

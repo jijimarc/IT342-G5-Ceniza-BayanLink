@@ -1,5 +1,6 @@
 package edu.cit.ceniza.bayanlink.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
@@ -9,21 +10,22 @@ import java.time.LocalDate;
 public class DocumentRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long requestid;
+    private Long requestId;
 
-    private Long residentid;
+    private Long userId;
     private String documentType;
     private String requirementURL;
     private LocalDate requestDate;
     private String urgencyLevel;
     private String status;
-    private String imagePath;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "resident_id")
-    private Resident resident; 
+    private Resident resident;
 
+    @JsonIgnore
     @ManyToOne
-    @JoinColumn(name = "processed_by_id", referencedColumnName = "officialId")
+    @JoinColumn(name = "processed_by_id")
     private Official processedBy;
 }

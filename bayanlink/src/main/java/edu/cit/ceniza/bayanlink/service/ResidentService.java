@@ -31,10 +31,7 @@ public class ResidentService {
 
     private ResidentDTO convertToDTO(Resident resident) {
         ResidentDTO dto = new ResidentDTO();
-        dto.setResidentId(resident.getResidentId());
-        
         dto.setUserId(resident.getUser().getUserId());
-        
         String middle = resident.getUser().getUserMiddlename() != null ? " " + resident.getUser().getUserMiddlename() + " " : " ";
         dto.setFullName(resident.getUser().getUserFirstname() + middle + resident.getUser().getUserLastname());
         

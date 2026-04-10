@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DocumentRequestDTO {
-    private Integer residentId;
+    private Integer userId;
     private String documentType;
     private String requirementURL;
     private String urgencyLevel;

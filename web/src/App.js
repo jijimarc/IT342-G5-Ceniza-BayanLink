@@ -6,7 +6,7 @@ import Dashboard from './components/Dashboard';
 import ProfilePage from './components/ProfilePage';
 import ClinicPage from './components/ClinicPage';
 import DocumentsPage from './components/DocumentsPage';
-import SchedulesPage from './components/SchedulesPage';
+import AppointmentsPage from './components/AppointmentsPage';
 import { AuthProvider } from './components/AuthContext';
 
 function App() {
@@ -28,7 +28,7 @@ function App() {
 
           <Route path="/documents" element={<DocumentsPage />} />
           
-          <Route path="/schedules" element={<SchedulesPage />} />
+          <Route path="/schedules" element={<AppointmentsPage />} />
           
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>

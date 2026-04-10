@@ -8,7 +8,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ResidentDTO {
-    private Integer residentId;
     private Integer userId;
     private String fullName; 
     private String userEmail;

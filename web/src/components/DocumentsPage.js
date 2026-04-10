@@ -13,14 +13,27 @@ const DocumentsPage = () => {
   const [toast, setToast] = useState({ message: '', type: '' });
   const [idImage, setIdImage] = useState(null);
   const [pendingDocuments, setPendingDocuments] = useState([]);
+  const [selectedDoc, setSelectedDoc] = useState(null);
+  const displayName = user?.isGuest ? "Guest User" : (user?.fullname || user?.email || "User");
+
+  const getEstimatedFee = (urgency) => {
+    switch (urgency) {
+      case 'Rush': return 150;
+      case 'Emergency': return 175;
+      case 'Standard':
+      default: return 100;
+    }
+  };
+
   const [formData, setFormData] = useState({
     fullName: user?.fullname || '',
     documentType: '',
     validId: '',
-    purpose: ''
+    purpose: '',
+    urgencyLevel: 'Standard'
   });
-
-  const displayName = user?.isGuest ? "Guest User" : (user?.fullname || user?.email || "User");
+  
+  
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -95,6 +108,7 @@ const DocumentsPage = () => {
     submissionData.append('documentType', formData.documentType);
     submissionData.append('validId', formData.validId);
     submissionData.append('purpose', formData.purpose);
+    submissionData.append('urgencyLevel', formData.urgencyLevel);
     submissionData.append('idImage', idImage); 
 
     try {
@@ -178,6 +192,9 @@ const DocumentsPage = () => {
                       <option value="Certificate of Indigency">Certificate of Indigency</option>
                       <option value="Business Permit">Business Permit</option>
                       <option value="Health Certificate">Health Certificate</option>
+                      <option value="Certificate of Good Moral Character">Certificate of Good Moral Character</option>
+                      <option value="Certificate of Residency">Certificate of Residency</option>
+                      <option value="Community Tax Certificate">Community Tax Certificate</option>
                     </select>
                   </div>
 
@@ -213,6 +230,22 @@ const DocumentsPage = () => {
                   </div>
                 </div>
 
+                <div className="form-group">
+                  <label>Urgency Level</label>
+                  <select 
+                    name="urgencyLevel" 
+                    className="form-control"
+                    value={formData.urgencyLevel}
+                    onChange={handleChange}
+                    required
+                  >
+                    <option value="Standard">Standard (3-5 Working Days)</option>
+                    <option value="Rush">Rush (1-2 Working Days)</option>
+                    <option value="Emergency">Emergency (Same Day)</option>
+                  </select>
+                </div>
+                
+
                 {/* Right Column: Textarea */}
                 <div className="form-col-right">
                   <div className="form-group h-100">
@@ -246,7 +279,7 @@ const DocumentsPage = () => {
               {/* Loop through the fetched documents */}
               {pendingDocuments.length > 0 ? (
                 pendingDocuments.map((doc, index) => (
-                  <div className="document-item" key={index}>
+                  <div className="document-item" key={index} onClick={() => setSelectedDoc(doc)} style={{ cursor: 'pointer' }}>
                     <div className="document-icon-wrapper">
                       <DocumentIcon />
                     </div>
@@ -268,7 +301,31 @@ const DocumentsPage = () => {
         type={toast.type} 
         onClose={() => setToast({ message: '', type: '' })} 
       />
+      {selectedDoc && (
+        <div className="modal-overlay" onClick={() => setSelectedDoc(null)}>
+          {/* Prevent clicks inside the modal from closing it */}
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Document Details</h3>
+              <button className="close-btn" onClick={() => setSelectedDoc(null)}>&times;</button>
+            </div>
+            <div className="modal-body">
+              <p><strong>Name:</strong> {displayName}</p>
+              <p><strong>Document:</strong> {selectedDoc.documentType}</p>
+              <p><strong>Urgency:</strong> {selectedDoc.urgencyLevel || 'Standard'}</p>
+              <p><strong>Status:</strong> <span className="status-badge">{selectedDoc.status || 'Pending'}</span></p>
+              
+              <div className="fee-container">
+                <p className="fee-label">Estimated Fee</p>
+                <h2 className="fee-amount">₱{getEstimatedFee(selectedDoc.urgencyLevel)}</h2>
+                <small className="fee-notice">*Please prepare this exact amount for your face-to-face retrieval at the Barangay Hall.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
+    
   );
 };
 

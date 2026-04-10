@@ -1,5 +1,6 @@
 package edu.cit.ceniza.bayanlink.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,12 +14,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Resident {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer residentId;
 
+    @Id
+    private Integer userId;
+
+    @JsonIgnore
     @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "userId")
+    @MapsId
+    @JoinColumn(name = "user_id")
     private User user;
 
     private String address;
