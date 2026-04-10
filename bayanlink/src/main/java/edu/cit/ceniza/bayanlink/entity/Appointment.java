@@ -28,12 +28,10 @@ public class Appointment {
 
     private String status;
 
-    // Foreign Key mapping back to the Resident who booked it
     @ManyToOne
     @JoinColumn(name = "resident_id", referencedColumnName = "residentId")
     private Resident resident;
 
-    // Foreign Key mapping back to the Official who manages it
     @ManyToOne
     @JoinColumn(name = "managed_by_id", referencedColumnName = "officialId")
     private Official managedBy;

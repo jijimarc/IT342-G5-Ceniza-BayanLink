@@ -31,8 +31,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // 1. ADDED BEHAVIOR (The "Decoration")
-        // We add new logic that the base request doesn't natively have: checking for JWTs.
         String authHeader = request.getHeader("Authorization");
         System.out.println("Processing Request: " + request.getRequestURI());
 
@@ -57,9 +55,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             System.out.println("No Bearer Header found!");
         }
 
-        // 2. DELEGATION (Passing control back to the wrapped component)
-        // Regardless of what our decorator did above, we now pass the request
-        // down the chain so the original intended target (e.g., the Controller) can run.
         filterChain.doFilter(request, response);
     }
 }

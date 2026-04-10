@@ -9,15 +9,8 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppointmentDTO {
-    // The ID of the resident booking the appointment
     private Integer residentId;
-
-    // e.g., "Medical Consultation", "Captain's Counseling"
     private String serviceType;
-
-    // The specific calendar day selected
     private LocalDate appointmentDate;
-
-    // The specific time block selected
     private LocalTime timeSlot;
 }

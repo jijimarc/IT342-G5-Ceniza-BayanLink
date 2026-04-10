@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css'; // Reuses main layout styling
-import './reusable/Documents.css'; // Specific styling for this page
+import './reusable/Dashboard.css'; 
+import './reusable/Documents.css'; 
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import Toast from './reusable/Toast';
@@ -9,9 +9,10 @@ import { DocumentIcon } from './reusable/Icons';
 
 const DocumentsPage = () => {
   const navigate = useNavigate();
-  const { user, logout } = useAuth();
+  const { user, token, logout } = useAuth();
   const [toast, setToast] = useState({ message: '', type: '' });
   const [idImage, setIdImage] = useState(null);
+  const [pendingDocuments, setPendingDocuments] = useState([]);
   const [formData, setFormData] = useState({
     fullName: user?.fullname || '',
     documentType: '',
@@ -20,6 +21,29 @@ const DocumentsPage = () => {
   });
 
   const displayName = user?.isGuest ? "Guest User" : (user?.fullname || user?.email || "User");
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      if (!user || user.isGuest || !token) return;
+
+      try {
+        const response = await fetch(`http://localhost:8080/api/documents/user/${user.userId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setPendingDocuments(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch documents:", error);
+      }
+    };
+
+    fetchDocuments();
+  }, [user, token]);
 
   const handleLogoutClick = () => {
     setToast({ message: 'Logging out successfully...', type: 'info' });
@@ -52,17 +76,52 @@ const DocumentsPage = () => {
       validId: '',
       purpose: ''
     });
+    setIdImage(null); 
+    const fileInput = document.querySelector('input[type="file"]');
+    if (fileInput) fileInput.value = '';
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.documentType || !formData.purpose) {
-      setToast({ message: 'Please fill in all required fields.', type: 'error' });
+    
+    if (!formData.documentType || !formData.purpose || !idImage) {
+      setToast({ message: 'Please fill in all required fields and upload an ID.', type: 'error' });
       return;
     }
-    // Mock submission
-    setToast({ message: 'Document request submitted successfully!', type: 'success' });
-    handleClear();
+
+    const submissionData = new FormData();
+    submissionData.append('userId', user.userId);
+    submissionData.append('fullName', formData.fullName);
+    submissionData.append('documentType', formData.documentType);
+    submissionData.append('validId', formData.validId);
+    submissionData.append('purpose', formData.purpose);
+    submissionData.append('idImage', idImage); 
+
+    try {
+      const response = await fetch('http://localhost:8080/api/documents/request', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        },
+        body: submissionData
+      });
+
+      if (response.ok) {
+        const newDoc = await response.json();
+        setToast({ message: 'Document request submitted successfully!', type: 'success' });
+        
+        setPendingDocuments(prev => [...prev, newDoc]);
+        
+        handleClear();
+      } else {
+        const errorMessage = await response.text(); 
+        console.error("Backend Error Details:", errorMessage);
+        setToast({ message: `Error: ${errorMessage}`, type: 'error' });
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      setToast({ message: 'Network error occurred.', type: 'error' });
+    }
   };
 
   return (
@@ -85,7 +144,6 @@ const DocumentsPage = () => {
 
         <section className="dashboard-body">
           
-          {/* New Request Form Card */}
           <div className="dashboard-card">
             <h3 className="card-title">New Request</h3>
             <form className="request-form" onSubmit={handleSubmit}>
@@ -180,38 +238,24 @@ const DocumentsPage = () => {
             </form>
           </div>
 
-          {/* Existing/Available Documents Grid */}
+          {/* Dynamic Documents Grid */}
           <div className="dashboard-card">
             <h3 className="card-title">Pending Documents</h3>
             <div className="documents-grid">
               
-              <div className="document-item">
-                <div className="document-icon-wrapper">
-                  <DocumentIcon />
-                </div>
-                <span className="document-label">Barangay Clearance</span>
-              </div>
-
-              <div className="document-item">
-                <div className="document-icon-wrapper">
-                  <DocumentIcon />
-                </div>
-                <span className="document-label">Cert. of Indigency</span>
-              </div>
-
-              <div className="document-item">
-                <div className="document-icon-wrapper">
-                  <DocumentIcon />
-                </div>
-                <span className="document-label">Business Permit</span>
-              </div>
-
-              <div className="document-item">
-                <div className="document-icon-wrapper">
-                  <DocumentIcon />
-                </div>
-                <span className="document-label">Health Certificate</span>
-              </div>
+              {/* Loop through the fetched documents */}
+              {pendingDocuments.length > 0 ? (
+                pendingDocuments.map((doc, index) => (
+                  <div className="document-item" key={index}>
+                    <div className="document-icon-wrapper">
+                      <DocumentIcon />
+                    </div>
+                    <span className="document-label">{doc.documentType}</span>
+                  </div>
+                ))
+              ) : (
+                <p style={{ color: '#64748b', fontSize: '0.9rem' }}>No pending documents found.</p>
+              )}
 
             </div>
           </div>
