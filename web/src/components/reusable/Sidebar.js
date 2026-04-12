@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
-import { useAuth } from '../AuthContext';
+import { useAuth } from '../AuthContext'; // Fixed relative import path
 
 /**
  * OBSERVER PATTERN IMPLEMENTATION
@@ -13,6 +13,7 @@ import { useAuth } from '../AuthContext';
  */
 const Sidebar = ({ onLogout }) => {
   const { user } = useAuth();
+  const isOfficial = user?.role === 'Official' || user?.role === 'Admin';
 
   return (
     <aside className="sidebar">
@@ -40,16 +41,21 @@ const Sidebar = ({ onLogout }) => {
               Clinic
             </NavLink>
 
+            <div className="nav-section-label">Services</div>
+
             <NavLink to="/schedules" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
               <span className="nav-icon"></span>
-              Request Appointment
+              {/* Dynamic Label based on Role */}
+              {isOfficial ? "Schedules" : "Request Appointment"}
             </NavLink>
 
             <NavLink to="/documents" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
               <span className="nav-icon"></span>
-              Documents
+              {/* Dynamic Label based on Role */}
+              {isOfficial ? "Documents" : "Request Documents"}
             </NavLink>
-            <div className="nav-section-label">Services</div>
+            
+            <div className="nav-section-label" style={{ marginTop: 'auto' }}>Account</div>
 
             <NavLink 
               to="/login" 

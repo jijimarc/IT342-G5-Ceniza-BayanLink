@@ -44,6 +44,7 @@ const Login = () => {
       <div className="auth-form-section">
         <div className="auth-card">
           <h2>Login</h2>
+          <p className="auth-subtitle">Please enter your details to sign in.</p>
           <form className="auth-form" onSubmit={handleLogin}>
             <div className="input-group">
               <label>Email Address</label>

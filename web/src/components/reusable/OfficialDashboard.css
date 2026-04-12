@@ -1,0 +1,132 @@
+/* --- Header Flex for Button --- */
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
+}
+
+.card-header-flex .card-title {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+/* --- Announcements List --- */
+.announcement-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.announcement-item {
+  background-color: #f8fafc;
+  border-left: 4px solid #3b82f6;
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.announcement-date {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.announcement-text {
+  margin: 0;
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.empty-state-box {
+  padding: 30px;
+  text-align: center;
+  color: #94a3b8;
+  font-style: italic;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+}
+
+/* --- Quick Actions Grid --- */
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.action-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 !important; /* Remove default padding to allow full-width button */
+  overflow: hidden;
+}
+
+.action-card-content {
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.action-icon {
+  font-size: 2.5rem;
+  background-color: #f1f5f9;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.doc-icon { background-color: #e0f2fe; }
+.sched-icon { background-color: #fef3c7; }
+
+.action-details h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+.stat-highlight {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.action-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.btn-action-full {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: center;
+}
+
+.btn-action-full.primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-action-full.primary:hover {
+  background-color: #2563eb;
+}

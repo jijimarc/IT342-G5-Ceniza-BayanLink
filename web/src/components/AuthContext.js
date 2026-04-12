@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     if (isGuest) {
       const guestUser = { 
         name: 'Guest User', 
-        role: 'guest', 
+        role: 'Guest', // Standardized casing
         isGuest: true, 
         userId: 0 
       };
@@ -34,29 +34,39 @@ export const AuthProvider = ({ children }) => {
         }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const fName = data.userFirstname || data.firstname || '';
-        const lName = data.userLastname || data.lastname || '';
+      // Parse the outer JSON
+      const jsonResponse = await response.json();
+
+      // Check BOTH response.ok and your SDD's custom jsonResponse.success flag
+      if (response.ok && jsonResponse.success) {
+        
+        // Extract the actual payload from the "data" wrapper defined in your SDD
+        const payload = jsonResponse.data; 
+        
+        const fName = payload.userFirstname || payload.firstname || '';
+        const lName = payload.userLastname || payload.lastname || '';
         const fullName = `${fName} ${lName}`.trim();
 
         const userData = {
-          userId: data.userId,
-          email: credentials.userEmail,
-          fullname: fullName !== '' ? fullName : credentials.userEmail,
-          role: data.role || 'standard_user', 
+          userId: payload.userId, 
+          email: payload.userEmail || credentials.userEmail,
+          fullname: fullName !== '' ? fullName : (payload.userEmail || credentials.userEmail),
+          // Store the role exactly as the backend sends it, fallback to Resident
+          role: payload.role || 'Resident', 
           isGuest: false
         };
 
-        setToken(data.token);
+        setToken(payload.token);
         setUser(userData);
 
-        localStorage.setItem('token', data.token);
+        localStorage.setItem('token', payload.token);
         localStorage.setItem('user', JSON.stringify(userData));
 
         return { success: true };
       } else {
-        return { success: false, message: "Invalid credentials" };
+        // Use the specific error message from your backend if available
+        const errorMessage = jsonResponse.error?.message || "Invalid credentials";
+        return { success: false, message: errorMessage };
       }
     } catch (error) {
       console.error("Login error:", error);

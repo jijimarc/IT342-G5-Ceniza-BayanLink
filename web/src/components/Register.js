@@ -61,6 +61,7 @@ const Register = () => {
                 type="email" 
                 className="auth-input"
                 onChange={handleChange}
+                placeholder="name@company.com"
                 required 
               />
             </div>
@@ -71,6 +72,7 @@ const Register = () => {
                 type="name" 
                 className="auth-input"
                 onChange={handleChange}
+                placeholder="Juan"
                 required 
               />
             </div><div className="input-group">
@@ -80,6 +82,7 @@ const Register = () => {
                 type="name" 
                 className="auth-input"
                 onChange={handleChange}
+                placeholder="Dela Cruz"
                 required 
               />
             </div>
@@ -90,6 +93,7 @@ const Register = () => {
                 type="password" 
                 className="auth-input"
                 onChange={handleChange}
+                placeholder="*********"
                 required 
               />
             </div>
@@ -100,6 +104,7 @@ const Register = () => {
                 type="password" 
                 className="auth-input"
                 onChange={handleChange}
+                placeholder="*********"
                 required 
               />
             </div>

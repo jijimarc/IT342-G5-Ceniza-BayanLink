@@ -163,7 +163,6 @@ const DocumentsPage = () => {
             <form className="request-form" onSubmit={handleSubmit}>
               
               <div className="form-columns">
-                {/* Left Column: Inputs */}
                 <div className="form-col-left">
                   <div className="form-group">
                     <label>Full Name</label>
