@@ -44,9 +44,6 @@ public class DocumentRequestService {
             throw new IllegalArgumentException("Unsupported document type: " + request.getDocumentType());
         }
 
-        if (strategy == null) {
-            throw new IllegalArgumentException("Unsupported document type: " + request.getDocumentType());
-        }
         strategy.processRequest(request);
         return documentRequestRepository.save(request);
     }
@@ -57,5 +54,13 @@ public class DocumentRequestService {
 
     public List<DocumentRequest> getPendingRequests() {
         return documentRequestRepository.findByStatus("Pending");
+    }
+
+    public DocumentRequest updateDocumentStatus(Integer requestId, Integer officialId, String status) {
+        DocumentRequest request = documentRequestRepository.findById(requestId)
+                .orElseThrow(() -> new RuntimeException("Document request not found with ID: " + requestId));
+        request.setStatus(status);
+
+        return documentRequestRepository.save(request);
     }
 }

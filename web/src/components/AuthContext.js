@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
     if (isGuest) {
       const guestUser = { 
         name: 'Guest User', 
-        role: 'Guest', // Standardized casing
+        role: 'Guest', 
         isGuest: true, 
         userId: 0 
       };
@@ -34,25 +34,22 @@ export const AuthProvider = ({ children }) => {
         }),
       });
 
-      // Parse the outer JSON
       const jsonResponse = await response.json();
 
-      // Check BOTH response.ok and your SDD's custom jsonResponse.success flag
       if (response.ok && jsonResponse.success) {
         
-        // Extract the actual payload from the "data" wrapper defined in your SDD
         const payload = jsonResponse.data; 
-        
-        const fName = payload.userFirstname || payload.firstname || '';
-        const lName = payload.userLastname || payload.lastname || '';
+        const rawRole = payload.userRole || 'Resident';
+        const formattedRole = rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase();
+        const fName = payload.userFirstname || payload.userFirstname || '';
+        const lName = payload.userLastname || payload.userLastname || '';
         const fullName = `${fName} ${lName}`.trim();
 
         const userData = {
           userId: payload.userId, 
-          email: payload.userEmail || credentials.userEmail,
-          fullname: fullName !== '' ? fullName : (payload.userEmail || credentials.userEmail),
-          // Store the role exactly as the backend sends it, fallback to Resident
-          role: payload.role || 'Resident', 
+          email: payload.userEmail,
+          fullname: fullName !== '' ? fullName : payload.userEmail,
+          role: formattedRole,
           isGuest: false
         };
 
@@ -64,7 +61,6 @@ export const AuthProvider = ({ children }) => {
 
         return { success: true };
       } else {
-        // Use the specific error message from your backend if available
         const errorMessage = jsonResponse.error?.message || "Invalid credentials";
         return { success: false, message: errorMessage };
       }

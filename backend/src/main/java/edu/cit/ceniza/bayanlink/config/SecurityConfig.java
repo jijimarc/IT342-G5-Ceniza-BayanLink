@@ -27,6 +27,8 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    // ... inside your SecurityConfig.java
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -35,7 +37,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/api/users/register", "/api/users/login", "/api/documents/**").permitAll()
+                        .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+
+                        .requestMatchers(HttpMethod.PUT, "/api/appointments/*/status").hasAuthority("OFFICIAL")
+                        .requestMatchers(HttpMethod.PUT, "/api/documents/*/status").hasAuthority("OFFICIAL")
+                        .requestMatchers(HttpMethod.POST, "/api/announcements").hasAuthority("OFFICIAL")
+                        .requestMatchers(HttpMethod.DELETE, "/api/announcements/*").hasAuthority("OFFICIAL")
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

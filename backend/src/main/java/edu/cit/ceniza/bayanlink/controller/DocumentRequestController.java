@@ -55,4 +55,14 @@ public class DocumentRequestController {
          List<DocumentRequest> pending = documentRequestService.getPendingRequests();
          return ResponseEntity.ok(pending);
     }
+
+    @PutMapping("/{requestId}/status")
+    public ResponseEntity<DocumentRequest> updateStatus(
+            @PathVariable Integer requestId,
+            @RequestParam Integer officialId,
+            @RequestParam String status) {
+
+        DocumentRequest updated = documentRequestService.updateDocumentStatus(requestId, officialId, status);
+        return ResponseEntity.ok(updated);
+    }
 }
