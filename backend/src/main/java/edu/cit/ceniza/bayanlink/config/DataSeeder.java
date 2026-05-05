@@ -1,9 +1,9 @@
 package edu.cit.ceniza.bayanlink.config;
 
-import edu.cit.ceniza.bayanlink.entity.Official;
-import edu.cit.ceniza.bayanlink.entity.Role;
-import edu.cit.ceniza.bayanlink.entity.User;
-import edu.cit.ceniza.bayanlink.repository.UserRepository;
+import edu.cit.ceniza.bayanlink.user.official.Official;
+import edu.cit.ceniza.bayanlink.user.Role;
+import edu.cit.ceniza.bayanlink.user.User;
+import edu.cit.ceniza.bayanlink.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,7 +40,7 @@ public class DataSeeder implements CommandLineRunner {
             user.setUserEmail(email);
             user.setUserFirstname(firstName);
             user.setUserLastname(lastName);
-            user.setUserPassword(passwordEncoder.encode("jianmarc!"));
+            user.setUserPassword(passwordEncoder.encode("admin123!"));
             user.setUserRole(Role.OFFICIAL);
 
             Official official = new Official();

@@ -1,6 +1,6 @@
 package edu.cit.ceniza.bayanlink.config;
 
-import edu.cit.ceniza.bayanlink.service.JwtService;
+import edu.cit.ceniza.bayanlink.user.auth.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
