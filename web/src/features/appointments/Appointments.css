@@ -1,4 +1,4 @@
-/* --- Schedule Form Layout --- */
+
 .schedule-form {
   display: flex;
   flex-direction: column;
@@ -91,8 +91,21 @@
 }
 
 .summary-box:focus {
-  /* Prevent the blue outline since it is read-only */
   outline: none;
   border-color: #cbd5e1; 
   background-color: #e2e8f0;
 }
+
+/* --- Official Specific Styles --- */
+.appointments-placeholder {
+  background-color: #f1f5f9;
+  height: 140px; 
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #cbd5e1;
+}
+
+/* Note: If .official-table is only used for appointments, you can paste it here. 
+   If officials use the exact same table style for Documents, put it in Layout.css! */

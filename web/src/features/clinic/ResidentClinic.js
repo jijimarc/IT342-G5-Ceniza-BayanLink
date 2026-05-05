@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css'; 
-import './reusable/Clinic.css'; 
+import Sidebar from '../../shared/components/Sidebar';
+import '../../shared/components/Layout.css'; 
+import './Clinic.css';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import Toast from './reusable/Toast';
-import { StaffIcon } from './reusable/Icons';
+import { useAuth } from '../../shared/context/AuthContext';
+import Toast from '../../shared/components/Toast';
+import { StaffIcon } from '../../shared/components/Icons';
 
 const Clinic = () => {
   const navigate = useNavigate();

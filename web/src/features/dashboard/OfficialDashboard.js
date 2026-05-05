@@ -1,32 +1,25 @@
 import React, { useState } from 'react';
-import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css'; 
-import './reusable/OfficialDashboard.css'; 
+import Sidebar from '../../shared/components/Sidebar';
+import '../../shared/components/Layout.css'; 
+import './Dashboard.css';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import Toast from './reusable/Toast';
+import { useAuth } from '../../shared/context/AuthContext';
+import Toast from '../../shared/components/Toast';
 
 const OfficialDashboard = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [toast, setToast] = useState({ message: '', type: '' });
-
   const displayName = user?.fullname || "Official User";
-
-  // --- MOCK STATE ---
   const [announcements, setAnnouncements] = useState([
     { id: 1, date: '2026-04-10', text: 'Free Polio Vaccination at the main health center this Friday. Please bring your health cards.' },
     { id: 2, date: '2026-04-09', text: 'Barangay Hall will be closed for regular processing on Monday due to the national holiday.' }
   ]);
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAnnouncement, setNewAnnouncement] = useState('');
-
-  // Quick Stats (In the future, fetch these from your backend)
   const pendingDocsCount = 5;
   const todayAppointmentsCount = 8;
-
-  // --- HANDLERS ---
+  const [isPresent] = useState(true);
   const handleLogoutClick = () => {
     setToast({ message: 'Logging out successfully...', type: 'info' });
     setTimeout(() => {
@@ -34,7 +27,6 @@ const OfficialDashboard = () => {
       navigate('/login');
     }, 1500);
   };
-
   const handlePostAnnouncement = (e) => {
     e.preventDefault();
     if (!newAnnouncement.trim()) return;
@@ -62,16 +54,17 @@ const OfficialDashboard = () => {
           </div>
           
           <div className="profile-section">
-            <div className="profile-details" onClick={() => navigate('/profile')} style={{ cursor: 'pointer' }}>
-              <span className="profile-name">{displayName}</span>
+            <div className="profile-details">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span className="profile-name">{displayName}</span>
+                <div className={`status-dot-mini ${isPresent ? 'online' : 'offline'}`}></div>
+              </div>
               <span className="profile-role">Official</span>
             </div>
           </div>
         </header>
 
         <section className="dashboard-body">
-          
-          {/* TOP SECTION: Announcements Board */}
           <div className="dashboard-card" style={{ marginBottom: '24px' }}>
             <div className="card-header-flex">
               <h3 className="card-title">Community Announcements</h3>
@@ -98,10 +91,31 @@ const OfficialDashboard = () => {
             </div>
           </div>
 
-          {/* BOTTOM SECTION: Quick Actions / Stats Grid */}
+          <div className="clinic-status-row">
+            <div className="dashboard-card clinic-staff-card">
+              <h3 className="card-title">Live Clinic Status</h3>
+              <div className="staff-chips-container">
+                <div className="staff-chip">
+                  <div className="staff-avatar">ES</div>
+                  <div className="staff-info">
+                    <span className="staff-name">Elena Santos</span>
+                    <span className="staff-dept">Nurse (You)</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="dashboard-card clinic-services-card">
+              <h3 className="card-title">Active Services</h3>
+              <div className="services-badges">
+                <span className="service-badge active">Consultation</span>
+                <span className="service-badge active">Vaccination</span>
+                <span className="service-badge inactive">Dental Check</span>
+              </div>
+            </div>
+          </div>
+
           <div className="quick-actions-grid">
-            
-            {/* Documents Action Card */}
             <div className="dashboard-card action-card">
               <div className="action-card-content">
                 <div className="action-icon doc-icon">📄</div>
@@ -119,7 +133,6 @@ const OfficialDashboard = () => {
               </button>
             </div>
 
-            {/* Schedules Action Card */}
             <div className="dashboard-card action-card">
               <div className="action-card-content">
                 <div className="action-icon sched-icon">📅</div>
@@ -141,8 +154,7 @@ const OfficialDashboard = () => {
 
         </section>
       </main>
-
-      {/* --- POST ANNOUNCEMENT MODAL --- */}
+      
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>

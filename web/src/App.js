@@ -1,28 +1,32 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-// --- Auth & Security ---
-import { AuthProvider, useAuth } from './components/AuthContext';
-import ProtectedRoute from './components/ProtectedRoute';
+// --- Shared Utils & Context ---
+import { AuthProvider, useAuth } from './shared/context/AuthContext';
+import ProtectedRoute from './shared/utils/ProtectedRoute';
 
-// --- Public Pages ---
-import Login from './components/Login';
-import Register from './components/Register';
+// --- Auth Feature ---
+import Login from './features/auth/Login';
+import Register from './features/auth/Register';
 
-// --- Shared Pages ---
-import ProfilePage from './components/ProfilePage';
+// --- Profile Feature ---
+import ProfilePage from './features/profile/ProfilePage';
 
-// --- Resident Pages ---
-import ResidentDashboard from './components/ResidentDashboard';
-import ResidentClinic from './components/ResidentClinic';
-import ResidentDocuments from './components/ResidentDocuments';
-import ResidentAppointments from './components/ResidentAppointments';
+// --- Dashboard Feature ---
+import ResidentDashboard from './features/dashboard/ResidentDashboard';
+import OfficialDashboard from './features/dashboard/OfficialDashboard';
 
-// --- Official Pages ---
-import OfficialDashboard from './components/OfficialDashboard';
-import OfficialClinic from './components/OfficialClinic';
-import OfficialDocuments from './components/OfficialDocuments';
-import OfficialAppointments from './components/OfficialAppointments';
+// --- Clinic Feature ---
+import ResidentClinic from './features/clinic/ResidentClinic';
+import OfficialClinic from './features/clinic/OfficialClinic';
+
+// --- Documents Feature ---
+import ResidentDocuments from './features/documents/ResidentDocuments';
+import OfficialDocuments from './features/documents/OfficialDocuments';
+
+// --- Appointments Feature ---
+import ResidentAppointments from './features/appointments/ResidentAppointments';
+import OfficialAppointments from './features/appointments/OfficialAppointments';
 
 /**
  * Traffic Controller Component

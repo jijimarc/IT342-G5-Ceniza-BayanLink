@@ -1,10 +1,11 @@
 import React, { useState } from 'react'; 
-import Sidebar from './reusable/Sidebar'; 
-import './reusable/Dashboard.css';
+import Sidebar from '../../shared/components/Sidebar'; 
+import '../../shared/components/Layout.css'; 
+import './Dashboard.css';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext'; 
-import Toast from './reusable/Toast';
-import { DocumentIcon } from './reusable/Icons';
+import { useAuth } from '../../shared/context/AuthContext'; 
+import Toast from '../../shared/components/Toast';
+import { DocumentIcon } from '../../shared/components/Icons';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -39,14 +40,12 @@ const Dashboard = () => {
         </header>
 
         <section className="dashboard-body">
-          {/* Guest Warning Banner */}
           {user?.isGuest && (
             <div className="guest-banner">
               You are viewing this as a Guest. Some features may be limited.
             </div>
           )}
 
-          {/* Announcements Section */}
           <div className="dashboard-card">
             <h3 className="card-title">Announcements</h3>
             <div className="announcements-placeholder">
@@ -54,10 +53,40 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* Pending Documents Section */}
+          <div className="clinic-status-row">
+            <div className="dashboard-card clinic-staff-card">
+              <h3 className="card-title">Staff Present</h3>
+              <div className="staff-chips-container">
+                <div className="staff-chip">
+                  <div className="staff-avatar">RR</div>
+                  <div className="staff-info">
+                    <span className="staff-name">Ricardo Reyes</span>
+                    <span className="staff-dept">Head Physician</span>
+                  </div>
+                </div>
+                <div className="staff-chip">
+                  <div className="staff-avatar">ES</div>
+                  <div className="staff-info">
+                    <span className="staff-name">Elena Santos</span>
+                    <span className="staff-dept">Nurse</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="dashboard-card clinic-services-card">
+              <h3 className="card-title">Available Services</h3>
+              <div className="services-badges">
+                <span className="service-badge active">Consultation</span>
+                <span className="service-badge active">Vaccination</span>
+                <span className="service-badge active">First Aid</span>
+                <span className="service-badge inactive">Dental Check</span>
+              </div>
+            </div>
+          </div>
+          <div className="dashboard-bottom-row"></div>
+
           <div className="dashboard-bottom-row">
-            
-            {/* Left Half: Pending Documents */}
             <div className="dashboard-card">
               <h3 className="card-title">Pending Documents</h3>
               <div className="documents-grid">
@@ -86,7 +115,6 @@ const Dashboard = () => {
               </div>
             </div>
 
-            {/* Right Half: Pending Appointments */}
             <div className="dashboard-card">
               <h3 className="card-title">Pending Appointments</h3>
               <div className="appointments-placeholder">

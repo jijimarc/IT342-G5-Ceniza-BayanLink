@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css'; 
-import './reusable/OfficialClinic.css'; 
+import Sidebar from '../../shared/components/Sidebar';
+import '../../shared/components/Layout.css'; 
+import './Clinic.css';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import Toast from './reusable/Toast';
-import { StaffIcon } from './reusable/Icons';
+import { useAuth } from '../../shared/context/AuthContext';
+import Toast from '../../shared/components/Toast';
+import { StaffIcon } from '../../shared/components/Icons';
 
 const OfficialClinic = () => {
   const navigate = useNavigate();
@@ -19,7 +19,9 @@ const OfficialClinic = () => {
     'Blood Pressure Monitoring'
   ]);
   const [newService, setNewService] = useState('');
-
+  const handleStatusUpdate = (id, newStatus) => {
+    setToast({ message: `Appointment ${id} has been ${newStatus}.`, type: 'success' });
+  };
   const [patients] = useState([
     { id: 'APT-A1B2', name: 'Juan Dela Cruz', service: 'General Consultation', time: '08:00 AM' },
     { id: 'APT-C3D4', name: 'Maria Clara', service: 'Maternal Health Check-up', time: '09:00 AM' }
@@ -118,10 +120,7 @@ const OfficialClinic = () => {
 
         <section className="dashboard-body">
           
-          {/* TOP ROW: Admin Controls */}
           <div className="admin-controls-grid">
-            
-            {/* Control 1: Staff Availability Toggles */}
             <div className="dashboard-card admin-card">
               <h3 className="card-title">Manage Staff Presence</h3>
               <p className="card-subtitle">Toggle who is visible to residents today.</p>
@@ -156,7 +155,6 @@ const OfficialClinic = () => {
               </div>
             </div>
 
-            {/* Control 2: Post Daily Services */}
             <div className="dashboard-card admin-card">
               <h3 className="card-title">Post Daily Services</h3>
               <p className="card-subtitle">Add services available at the clinic today.</p>
@@ -174,19 +172,23 @@ const OfficialClinic = () => {
 
               <ul className="posted-services-list">
                 {services.map((svc, index) => (
-                  <li key={index}>
-                    <span>{svc}</span>
+                  <li key={index} className="service-management-item">
+                    <span className="service-badge active">{svc}</span>
                     <button className="btn-remove-sm" onClick={() => handleRemoveService(index)}>&times;</button>
                   </li>
                 ))}
-                {services.length === 0 && <li className="empty-text">No services posted today.</li>}
               </ul>
             </div>
           </div>
 
-          {/* BOTTOM ROW: The Wireframe Boxes */}
           <div className="dashboard-card">
-            <h3 className="card-title">Today's Patients</h3>
+            <div className="table-header-flex">
+              <h3 className="card-title">Today's Patients</h3>
+              <input 
+                type="text" 
+                className="table-search" 
+                placeholder="Search patient name..." />
+            </div>
             <div className="table-responsive">
               <table className="official-table">
                 <thead>
@@ -199,17 +201,30 @@ const OfficialClinic = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {patients.map((pt, index) => (
-                    <tr key={index}>
-                      <td><span className="ref-badge">{pt.id}</span></td>
-                      <td className="fw-600">{pt.name}</td>
-                      <td>{pt.service}</td>
-                      <td>{pt.time}</td>
-                      <td>
-                        <button className="btn-action complete">Mark Attended</button>
+                  {patients.length > 0 ? (
+                    patients.map((pt, index) => (
+                      <tr key={index}>
+                        <td><span className="ref-badge">{pt.id}</span></td>
+                        <td className="fw-600">{pt.name}</td>
+                        <td>{pt.service}</td>
+                        <td>{pt.time}</td>
+                        <td>
+                          <button 
+                            className="btn-action complete" 
+                            onClick={() => handleStatusUpdate(pt.id, 'marked as attended')}
+                          >
+                            Mark Attended
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>
+                        No patients scheduled for today.
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>
@@ -229,18 +244,36 @@ const OfficialClinic = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {pendingAppointments.map((apt, index) => (
-                    <tr key={index}>
-                      <td><span className="ref-badge">{apt.id}</span></td>
-                      <td className="fw-600">{apt.name}</td>
-                      <td>{apt.date} at {apt.time}</td>
-                      <td>{apt.service}</td>
-                      <td className="action-cell">
-                        <button className="btn-action approve">Approve</button>
-                        <button className="btn-action reject">Reject</button>
+                  {pendingAppointments.length > 0 ? (
+                    pendingAppointments.map((apt, index) => (
+                      <tr key={index}>
+                        <td><span className="ref-badge">{apt.id}</span></td>
+                        <td className="fw-600">{apt.name}</td>
+                        <td>{apt.date} at {apt.time}</td>
+                        <td>{apt.service}</td>
+                        <td className="action-cell">
+                          <button 
+                            className="btn-action approve" 
+                            onClick={() => handleStatusUpdate(apt.id, 'approved')}
+                          >
+                            Approve
+                          </button>
+                          <button 
+                            className="btn-action reject" 
+                            onClick={() => handleStatusUpdate(apt.id, 'rejected')}
+                          >
+                            Reject
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>
+                        No pending appointment requests at this time.
                       </td>
                     </tr>
-                  ))}
+                  )}
                 </tbody>
               </table>
             </div>

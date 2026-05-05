@@ -1,10 +1,26 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './reusable/AuthPage.css';
-import Toast from './reusable/Toast';
+import './AuthPage.css';
+import Toast from '../../shared/components/Toast';
+
+const EyeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+  </svg>
+);
+
+const EyeOffIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+    <line x1="1" y1="1" x2="23" y2="23"></line>
+  </svg>
+);
 
 const Register = () => {
   const [toast, setToast] = useState({ message: '', type: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     userEmail: '',
@@ -20,6 +36,20 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+
+    if (!formData.userEmail.endsWith("@gmail.com")) {
+      return setToast({ message: 'Only @gmail.com addresses are allowed.', type: 'error' });
+    }
+    
+    // eslint-disable-next-line no-useless-escape
+    const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
+    if (!passwordRegex.test(formData.userPassword)) {
+      return setToast({ message: 'Password needs at least 1 number and 1 special character.', type: 'error' });
+    }
+
+    if (formData.userPassword !== formData.confirmPassword) {
+      return setToast({ message: 'Passwords do not match.', type: 'error' });
+    }
 
     try {
       const response = await fetch('http://localhost:8080/api/users/register', {
@@ -59,6 +89,7 @@ const Register = () => {
               <input 
                 name="userEmail"
                 type="email" 
+                value={formData.userEmail}
                 className="auth-input"
                 onChange={handleChange}
                 placeholder="name@company.com"
@@ -88,25 +119,46 @@ const Register = () => {
             </div>
             <div className="input-group">
               <label>Password</label>
-              <input 
-                name="userPassword"
-                type="password" 
-                className="auth-input"
-                onChange={handleChange}
-                placeholder="*********"
-                required 
-              />
+              <div className="password-input-wrapper">
+                <input 
+                  name="userPassword"
+                  type={showPassword ? "text" : "password"} 
+                  className="auth-input"
+                  value={formData.userPassword}
+                  onChange={handleChange}
+                  placeholder="*********"
+                  required 
+                />
+                <button 
+                  type="button" 
+                  className="password-toggle" 
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </button>
+              </div>
             </div>
             <div className="input-group">
               <label>Confirm Password</label>
-              <input 
-                name="confirmPassword"
-                type="password" 
-                className="auth-input"
-                onChange={handleChange}
-                placeholder="*********"
-                required 
-              />
+              <div className="password-input-wrapper">
+                <input 
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"} 
+                  className="auth-input"
+                  value={formData.confirmPassword} // Keep it controlled
+                  onChange={handleChange}
+                  placeholder="*********"
+                  required 
+                />
+                <button 
+                  type="button" 
+                  className="password-toggle" 
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
+                </button>
+              </div>
             </div>
             <button type="submit" className="auth-btn btn-primary">Create Account</button>
             <div className="auth-footer">

@@ -35,14 +35,13 @@ export const AuthProvider = ({ children }) => {
       });
 
       const jsonResponse = await response.json();
-
-      if (response.ok && jsonResponse.success) {
-        
-        const payload = jsonResponse.data; 
-        const rawRole = payload.userRole || 'Resident';
+      if (response.ok) { 
+        const payload = jsonResponse; 
+        const rawRole = payload.userRole || 'Resident'; 
         const formattedRole = rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase();
-        const fName = payload.userFirstname || payload.userFirstname || '';
-        const lName = payload.userLastname || payload.userLastname || '';
+        
+        const fName = payload.userFirstname || '';
+        const lName = payload.userLastname || '';
         const fullName = `${fName} ${lName}`.trim();
 
         const userData = {
@@ -61,7 +60,7 @@ export const AuthProvider = ({ children }) => {
 
         return { success: true };
       } else {
-        const errorMessage = jsonResponse.error?.message || "Invalid credentials";
+        const errorMessage = jsonResponse.message || "Invalid credentials";
         return { success: false, message: errorMessage };
       }
     } catch (error) {

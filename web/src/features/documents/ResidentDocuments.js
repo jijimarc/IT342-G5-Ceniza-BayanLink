@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css'; 
-import './reusable/Documents.css'; 
+import Sidebar from '../../shared/components/Sidebar';
+import '../../shared/components/Layout.css'; 
+import './Documents.css';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import Toast from './reusable/Toast';
-import { DocumentIcon } from './reusable/Icons'; 
+import { useAuth } from '../../shared/context/AuthContext';
+import Toast from '../../shared/components/Toast';
+import { DocumentIcon } from '../../shared/components/Icons'; 
 
 const DocumentsPage = () => {
   const navigate = useNavigate();

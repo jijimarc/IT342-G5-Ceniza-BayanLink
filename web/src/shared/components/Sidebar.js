@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import './Sidebar.css';
-import { useAuth } from '../AuthContext'; // Fixed relative import path
+import { useAuth } from '../context/AuthContext'; 
 
 /**
  * OBSERVER PATTERN IMPLEMENTATION
@@ -36,10 +36,11 @@ const Sidebar = ({ onLogout }) => {
               Profile
             </NavLink>
             
-            <NavLink to="/clinic" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-              <span className="nav-icon"></span>
-              Clinic
-            </NavLink>
+            {user?.role === 'Official' && (
+              <NavLink to="/clinic" className="nav-item">
+                Clinic Management
+              </NavLink>
+            )}
 
             <div className="nav-section-label">Services</div>
 

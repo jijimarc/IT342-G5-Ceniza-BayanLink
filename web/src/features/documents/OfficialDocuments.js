@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css'; 
-import './reusable/OfficialClinic.css'; 
+import Sidebar from '../../shared/components/Sidebar';
+import '../../shared/components/Layout.css'; 
+import './Documents.css';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import Toast from './reusable/Toast';
+import { useAuth } from '../../shared/context/AuthContext';
+import Toast from '../../shared/components/Toast';
 
 const OfficialDocuments = () => {
   const navigate = useNavigate();
@@ -126,7 +126,6 @@ const OfficialDocuments = () => {
         </section>
       </main>
 
-      {/* --- THE VERIFICATION MODAL --- */}
       {selectedDoc && (
         <div className="modal-overlay" onClick={() => setSelectedDoc(null)}>
           <div className="modal-content large-modal" onClick={(e) => e.stopPropagation()}>
@@ -150,7 +149,6 @@ const OfficialDocuments = () => {
               <div className="doc-id-col">
                 <h4 style={{ marginTop: 0 }}>ID Verification</h4>
                 <p style={{ fontSize: '0.85rem', color: '#64748b' }}>Provided: {selectedDoc.idType}</p>
-                {/* Mock Image Box for the ID */}
                 <div className="id-image-placeholder">
                   <span style={{ color: '#94a3b8' }}>[ Uploaded ID Image preview will appear here ]</span>
                 </div>

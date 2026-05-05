@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css'; 
-import './reusable/Appointments.css'; 
+import Sidebar from '../../shared/components/Sidebar';
+import { useAuth } from '../../shared/context/AuthContext';
+import '../../shared/components/Layout.css'; 
+import './Appointments.css'; 
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
-import Toast from './reusable/Toast';
+import Toast from '../../shared/components/Toast';
 
 const AppointmentsPage = () => {
   const navigate = useNavigate();
@@ -19,10 +19,6 @@ const AppointmentsPage = () => {
     timeSlot: '',
     notes: ''
   });
-
-  
-
-  // Replace the single array with these two
   const morningSlots = ["08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM"];
   const afternoonSlots = ["01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"];
 

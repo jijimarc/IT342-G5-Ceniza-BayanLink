@@ -1,16 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css';
-import './reusable/Profile.css';
-import { useAuth } from './AuthContext';
+import Sidebar from '../../shared/components/Sidebar';
+import { useAuth } from '../../shared/context/AuthContext';
+import '../../shared/components/Layout.css';
+import './Profile.css';
 const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
 const Profile = () => {
-  // Assuming your AuthContext provides the role (e.g., user.role = 'Resident' or 'Official')
   const { user, token } = useAuth(); 
   const [isEditing, setIsEditing] = useState(false);
-  
-  // 1. Added all SDD fields for both Residents and Officials
   const [formData, setFormData] = useState({
     userId: user?.userId || '', 
     userFirstname: '',
@@ -25,7 +22,6 @@ const Profile = () => {
     civilStatus: '',
     voterStatus: '',
     occupation: '',
-    // Official Specific
     positionTitle: '',
     termStart: '',
     termEnd: ''
@@ -37,7 +33,7 @@ const Profile = () => {
     const initializeProfile = async () => {
       if (user?.isGuest) {
         const guestData = {
-          ...formData, // Spread existing empty strings
+          ...formData, 
           userId: 0,
           userFirstname: 'Guest',
           userLastname: 'User',

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import Sidebar from './reusable/Sidebar';
-import './reusable/Dashboard.css'; 
-import './reusable/OfficialClinic.css'; 
+import Sidebar from '../../shared/components/Sidebar';
+import '../../shared/components/Layout.css'; 
+import './Appointments.css'; 
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../../shared/context/AuthContext';
 
 const OfficialAppointments = () => {
   const navigate = useNavigate();

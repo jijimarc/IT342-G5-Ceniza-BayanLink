@@ -1,4 +1,27 @@
-/* --- Document Review Modal Specifics --- */
+.request-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-columns {
+  display: flex;
+  gap: 30px;
+}
+
+.form-col-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-col-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .large-modal {
   max-width: 700px !important;
   width: 95%;
