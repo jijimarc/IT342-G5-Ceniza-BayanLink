@@ -12,6 +12,11 @@ public class ProfileDTO {
     private String userLastname;
     private String userMiddlename;
     private LocalDate userBirthdate;
-    private String userProfileImage;
     private int age;
+    private String userProfileImage;
+    private String address;
+    private String contactNumber;
+    private String civilStatus;
+    private String voterStatus;
+    private String occupation;
 }

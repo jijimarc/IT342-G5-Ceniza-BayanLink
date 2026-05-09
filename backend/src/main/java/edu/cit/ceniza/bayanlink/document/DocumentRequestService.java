@@ -17,23 +17,28 @@ public class DocumentRequestService {
 
     private final Map<String, DocumentProcessingStrategy> strategyMap;
     private final DocumentRequestRepository documentRequestRepository;
-    private final ResidentRepository residentRepository; 
+    private final ResidentRepository residentRepository;
+    private final SupabaseStorageService supabaseStorageService;
 
-    public DocumentRequest handleNewRequest(Integer userId, String fullName, String documentType, 
+    public DocumentRequest handleNewRequest(Integer userId, String fullName, String documentType,
                                             String validId, String purpose, String urgencyLevel, MultipartFile idImage) throws Exception {
 
         Resident resident = residentRepository.findByUser_UserId(userId)
                 .orElseThrow(() -> new RuntimeException("Resident profile not found for User ID: " + userId));
 
-        String requirementUrl = "https://supabase-bucket-url.com/uploads/" + idImage.getOriginalFilename();
+        String requirementUrl = supabaseStorageService.uploadFile(idImage);
 
         DocumentRequest request = new DocumentRequest();
         request.setResident(resident);
         request.setDocumentType(documentType);
         request.setRequirementURL(requirementUrl);
+
         request.setRequestDate(LocalDate.now());
         request.setUrgencyLevel(urgencyLevel);
-        request.setStatus("Pending");
+        request.setStatus("PENDING");
+
+        request.setPurpose(purpose);
+        request.setValidIdType(validId);
 
         String strategyKey = request.getDocumentType().toUpperCase().replace(" ", "_") + "_STRATEGY";
         DocumentProcessingStrategy strategy = strategyMap.get(strategyKey);
@@ -51,7 +56,7 @@ public class DocumentRequestService {
     }
 
     public List<DocumentRequest> getPendingRequests() {
-        return documentRequestRepository.findByStatus("Pending");
+        return documentRequestRepository.findByStatus("PENDING");
     }
 
     public DocumentRequest updateDocumentStatus(Integer requestId, Integer officialId, String status) {
@@ -60,5 +65,9 @@ public class DocumentRequestService {
         request.setStatus(status);
 
         return documentRequestRepository.save(request);
+    }
+
+    public List<DocumentRequest> getAllRequests() {
+        return documentRequestRepository.findAll();
     }
 }

@@ -27,8 +27,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // ... inside your SecurityConfig.java
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -38,11 +36,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/users/register", "/api/users/login").permitAll()
-
-                        .requestMatchers(HttpMethod.PUT, "/api/appointments/*/status").hasAuthority("OFFICIAL")
-                        .requestMatchers(HttpMethod.PUT, "/api/documents/*/status").hasAuthority("OFFICIAL")
-                        .requestMatchers(HttpMethod.POST, "/api/announcements").hasAuthority("OFFICIAL")
-                        .requestMatchers(HttpMethod.DELETE, "/api/announcements/*").hasAuthority("OFFICIAL")
+                        .requestMatchers(HttpMethod.GET, "/api/clinic-services").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/appointments/**").hasAnyAuthority("OFFICIAL", "Official", "ROLE_OFFICIAL")
+                        .requestMatchers(HttpMethod.PUT, "/api/documents/**").hasAnyAuthority("OFFICIAL", "Official", "ROLE_OFFICIAL")
+                        .requestMatchers(HttpMethod.POST, "/api/announcements").hasAnyAuthority("OFFICIAL", "Official", "ROLE_OFFICIAL")
+                        .requestMatchers(HttpMethod.DELETE, "/api/announcements/*").hasAnyAuthority("OFFICIAL", "Official", "ROLE_OFFICIAL")
+                        .requestMatchers("/api/clinic-services/**").hasAnyAuthority("OFFICIAL", "Official", "ROLE_OFFICIAL")
 
                         .anyRequest().authenticated()
                 )

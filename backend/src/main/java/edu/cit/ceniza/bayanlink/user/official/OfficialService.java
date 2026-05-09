@@ -26,18 +26,27 @@ public class OfficialService {
                 .collect(Collectors.toList());
     }
 
+    public OfficialDTO updatePresence(Integer userId, boolean status) {
+        Official official = officialRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new RuntimeException("Official not found"));
+
+        official.setPresent(status);
+        officialRepository.save(official);
+
+        return convertToDTO(official);
+    }
+
     private OfficialDTO convertToDTO(Official official) {
         OfficialDTO dto = new OfficialDTO();
         dto.setUserId(official.getUser().getUserId());
         dto.setFullName(official.getUser().getUserFirstname() + " " + official.getUser().getUserLastname());
         dto.setUserEmail(official.getUser().getUserEmail());
-        
         dto.setAddress(official.getAddress());
         dto.setContactNumber(official.getContactNumber());
         dto.setPositionTitle(official.getPosition());
         dto.setTermStart(official.getTermStart());
         dto.setTermEnd(official.getTermEnd());
-        
+        dto.setPresent(official.isPresent());
         return dto;
     }
 }

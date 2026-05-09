@@ -63,4 +63,10 @@ public class DocumentRequestController {
         DocumentRequest updated = documentRequestService.updateDocumentStatus(requestId, officialId, status);
         return ResponseEntity.ok(updated);
     }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<DocumentRequest>> getAllRequests() {
+        List<DocumentRequest> allDocs = documentRequestService.getAllRequests();
+        return ResponseEntity.ok(allDocs);
+    }
 }

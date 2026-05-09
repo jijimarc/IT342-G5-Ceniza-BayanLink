@@ -43,4 +43,13 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "managed_by_id")
     private Official managedBy;
+
+    public String getFullName() {
+        if (this.resident != null && this.resident.getUser() != null) {
+            String first = this.resident.getUser().getUserFirstname();
+            String last = this.resident.getUser().getUserLastname();
+            return (first != null ? first : "") + " " + (last != null ? last : "");
+        }
+        return "Unknown Resident";
+    }
 }

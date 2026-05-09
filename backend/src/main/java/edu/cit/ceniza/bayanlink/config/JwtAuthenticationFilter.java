@@ -1,5 +1,7 @@
 package edu.cit.ceniza.bayanlink.config;
 
+import edu.cit.ceniza.bayanlink.user.User;
+import edu.cit.ceniza.bayanlink.user.UserRepository;
 import edu.cit.ceniza.bayanlink.user.auth.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -7,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -14,18 +17,12 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 import java.util.Collections;
 
-/**
- * DECORATOR PATTERN IMPLEMENTATION
- * * Base Component: The standard HTTP request processing chain (FilterChain).
- * Decorator: This JwtAuthenticationFilter class.
- * * Purpose: Dynamically adds security verification behavior to incoming requests
- * before delegating the execution back to the standard processing chain.
- */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -40,12 +37,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String userEmail = jwtService.extractEmail(token);
                 System.out.println("Token Valid. User: " + userEmail);
 
-                // Adding security context state to this specific request thread
                 if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                            userEmail, null, Collections.emptyList()
-                    );
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                    User user = userRepository.findByUserEmail(userEmail).orElse(null);
+
+                    if (user != null) {
+                        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(user.getUserRole().name());
+                        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                                userEmail, null, Collections.singletonList(authority)
+                        );
+                        SecurityContextHolder.getContext().setAuthentication(authToken);
+                    }
                 }
             } catch (Exception e) {
                 System.out.println("ERROR Validating Token: " + e.getMessage());

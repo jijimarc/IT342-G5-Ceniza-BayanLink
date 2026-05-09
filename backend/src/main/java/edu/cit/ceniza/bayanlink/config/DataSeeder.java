@@ -1,5 +1,7 @@
 package edu.cit.ceniza.bayanlink.config;
 
+import edu.cit.ceniza.bayanlink.clinic.ClinicService;
+import edu.cit.ceniza.bayanlink.clinic.ClinicServiceRepository;
 import edu.cit.ceniza.bayanlink.user.official.Official;
 import edu.cit.ceniza.bayanlink.user.Role;
 import edu.cit.ceniza.bayanlink.user.User;
@@ -10,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -17,6 +21,7 @@ public class DataSeeder implements CommandLineRunner {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ClinicServiceRepository clinicServiceRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -24,17 +29,40 @@ public class DataSeeder implements CommandLineRunner {
         // 1. Core Administrative Officials
         seedOfficial("captain@gmail.com", "Jian Marc", "Ceniza", "Barangay Captain", "Executive");
         seedOfficial("secretary@gmail.com", "Maribeth", "Ceniza", "Barangay Secretary", "Administration");
+        seedOfficial("receptionist@gmail.com", "Alex", "Ceniza", "Front Desk Receptionist", "Administration");
 
         // 2. Health Clinic Staff
-        seedOfficial("dr.reyes@gmail.com", "Ricardo", "Reyes", "Head Physician", "Health");
-        seedOfficial("nurse.santos@gmail.com", "Elena", "Santos", "Registered Nurse", "Health");
-        seedOfficial("dr.lim@gmail.com", "Jonathan", "Lim", "Pediatrician", "Health");
+        seedOfficial("drreyes@gmail.com", "Ricardo", "Reyes", "Head Physician", "Health");
+        seedOfficial("nursesantos@gmail.com", "Elena", "Santos", "Registered Nurse", "Health");
+        seedOfficial("drlim@gmail.com", "Jonathan", "Lim", "Pediatrician", "Health");
 
-        System.out.println("All default officials have been seeded!");
+        // 3. Seed Common Barangay Services
+        seedServices();
+
+        System.out.println("Database seeding completed!");
+    }
+
+    private void seedServices() {
+        List<String> commonServices = Arrays.asList(
+                "General Consultation",
+                "Blood Pressure Monitoring",
+                "Maternal Health Check-up",
+                "Vaccination & Immunization",
+                "Basic Wound Care / First Aid",
+                "Free Dental Checkup"
+        );
+
+        for (String serviceName : commonServices) {
+            if (!clinicServiceRepository.existsByServiceName(serviceName)) {
+                ClinicService service = new ClinicService();
+                service.setServiceName(serviceName);
+                service.setAvailable(true);
+                clinicServiceRepository.save(service);
+            }
+        }
     }
 
     private void seedOfficial(String email, String firstName, String lastName, String position, String committee) {
-
         if (!userRepository.existsByUserEmail(email)) {
             User user = new User();
             user.setUserEmail(email);

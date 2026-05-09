@@ -25,4 +25,12 @@ public class OfficialController {
         OfficialDTO profile = officialService.getOfficialByUserId(userId);
         return ResponseEntity.ok(profile);
     }
+
+    @PutMapping("/{userId}/presence")
+    public ResponseEntity<OfficialDTO> updatePresence(
+            @PathVariable Integer userId,
+            @RequestParam boolean isPresent) {
+        OfficialDTO updated = officialService.updatePresence(userId, isPresent);
+        return ResponseEntity.ok(updated);
+    }
 }

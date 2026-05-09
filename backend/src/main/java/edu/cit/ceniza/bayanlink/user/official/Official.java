@@ -35,4 +35,7 @@ public class Official {
     private String committee;
     private LocalDate termStart;
     private LocalDate termEnd;
+
+    @Column(name = "is_present", columnDefinition = "boolean default true")
+    private boolean isPresent = true;
 }

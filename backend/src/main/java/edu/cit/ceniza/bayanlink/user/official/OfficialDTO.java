@@ -16,4 +16,5 @@ public class OfficialDTO {
     private String positionTitle; 
     private LocalDate termStart;
     private LocalDate termEnd;
+    private boolean isPresent;
 }
