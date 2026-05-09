@@ -12,33 +12,17 @@ const OfficialClinic = () => {
   const { user, token, logout } = useAuth(); 
   const [toast, setToast] = useState({ message: '', type: '' });
   const displayName = user?.fullname || "Official User";
+  
   const [staffList, setStaffList] = useState([]);
   const [isLoadingStaff, setIsLoadingStaff] = useState(true);
-  const [services, setServices] = useState([
-    'General Consultation',
-    'Blood Pressure Monitoring'
-  ]);
+  const [services, setServices] = useState([]);
   const [newService, setNewService] = useState('');
-  const handleStatusUpdate = (id, newStatus) => {
-    setToast({ message: `Appointment ${id} has been ${newStatus}.`, type: 'success' });
-  };
-  const [patients] = useState([
-    { id: 'APT-A1B2', name: 'Juan Dela Cruz', service: 'General Consultation', time: '08:00 AM' },
-    { id: 'APT-C3D4', name: 'Maria Clara', service: 'Maternal Health Check-up', time: '09:00 AM' }
-  ]);
-
-  const [pendingAppointments] = useState([
-    { id: 'APT-E5F6', name: 'Pedro Penduko', service: 'First Aid', time: '01:00 PM', date: '2026-04-12' },
-    { id: 'APT-G7H8', name: 'Andres Bonifacio', service: 'Vaccination', time: '02:30 PM', date: '2026-04-12' }
-  ]);
 
   useEffect(() => {
     const fetchHealthStaff = async () => {
       try {
         const response = await fetch('http://localhost:8080/api/officials/directory', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+          headers: { 'Authorization': `Bearer ${token}` }
         });
 
         if (response.ok) {
@@ -54,12 +38,10 @@ const OfficialClinic = () => {
             id: staff.userId,
             name: staff.fullName,
             title: staff.positionTitle,
-            isPresent: true 
+            isPresent: staff.present !== undefined ? staff.present : staff.isPresent
           }));
           
           setStaffList(formattedStaff);
-        } else {
-          console.error("Failed to fetch directory");
         }
       } catch (error) {
         console.error("Network error:", error);
@@ -68,8 +50,23 @@ const OfficialClinic = () => {
       }
     };
 
+    const fetchServices = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/clinic-services', {
+           headers: { 'Authorization': `Bearer ${token}` } 
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setServices(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch services:", error);
+      }
+    };
+
     if (token) {
       fetchHealthStaff();
+      fetchServices(); 
     }
   }, [token]);
 
@@ -81,23 +78,82 @@ const OfficialClinic = () => {
     }, 1500);
   };
 
-  const handleToggleStaff = (id) => {
+  const handleToggleStaff = async (id, currentStatus) => {
+    const newStatus = !currentStatus; 
     setStaffList(staffList.map(staff => 
-      staff.id === id ? { ...staff, isPresent: !staff.isPresent } : staff
+      staff.id === id ? { ...staff, isPresent: newStatus } : staff
     ));
-    setToast({ message: 'Staff availability updated.', type: 'info' });
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/officials/${id}/presence?isPresent=${newStatus}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        setToast({ message: 'Staff availability saved.', type: 'success' });
+      } else {
+        setStaffList(staffList.map(staff => 
+          staff.id === id ? { ...staff, isPresent: currentStatus } : staff
+        ));
+        setToast({ message: 'Failed to save availability.', type: 'error' });
+      }
+    } catch (error) {
+      console.error("Error updating presence:", error);
+      setToast({ message: 'Network error occurred.', type: 'error' });
+    }
   };
 
-  const handleAddService = (e) => {
+  const handleToggleService = async (id, currentStatus) => {
+    const newStatus = !currentStatus; 
+    setServices(services.map(svc => 
+      svc.id === id ? { ...svc, available: newStatus, isAvailable: newStatus } : svc
+    ));
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/clinic-services/${id}/toggle?isAvailable=${newStatus}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (response.ok) {
+        setToast({ message: 'Service status updated.', type: 'success' });
+      } else {
+        throw new Error("Failed to toggle");
+      }
+    } catch (error) {
+      setServices(services.map(svc => 
+        svc.id === id ? { ...svc, available: currentStatus, isAvailable: currentStatus } : svc
+      ));
+      setToast({ message: 'Failed to update service.', type: 'error' });
+    }
+  };
+
+  const handleAddService = async (e) => {
     e.preventDefault();
     if (!newService.trim()) return;
-    setServices([...services, newService]);
-    setNewService('');
-    setToast({ message: 'Service posted successfully.', type: 'success' });
-  };
 
-  const handleRemoveService = (indexToRemove) => {
-    setServices(services.filter((_, index) => index !== indexToRemove));
+    try {
+      const response = await fetch('http://localhost:8080/api/clinic-services', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
+        body: JSON.stringify({ serviceName: newService, isAvailable: true })
+      });
+
+      if (response.ok) {
+        const addedService = await response.json();
+        setServices([...services, addedService]); 
+        setNewService('');
+        setToast({ message: 'New service added successfully.', type: 'success' });
+      } else {
+        setToast({ message: 'Failed to add service.', type: 'error' });
+      }
+    } catch (error) {
+      console.error("Error adding service:", error);
+      setToast({ message: 'Network error occurred.', type: 'error' });
+    }
   };
 
   return (
@@ -119,8 +175,8 @@ const OfficialClinic = () => {
         </header>
 
         <section className="dashboard-body">
-          
           <div className="admin-controls-grid">
+            
             <div className="dashboard-card admin-card">
               <h3 className="card-title">Manage Staff Presence</h3>
               <p className="card-subtitle">Toggle who is visible to residents today.</p>
@@ -138,12 +194,11 @@ const OfficialClinic = () => {
                           <div className="staff-title-sm">{staff.title}</div>
                         </div>
                       </div>
-                      
                       <label className="switch">
                         <input 
                           type="checkbox" 
                           checked={staff.isPresent} 
-                          onChange={() => handleToggleStaff(staff.id)} 
+                          onChange={() => handleToggleStaff(staff.id, staff.isPresent)} 
                         />
                         <span className="slider round"></span>
                       </label>
@@ -156,8 +211,8 @@ const OfficialClinic = () => {
             </div>
 
             <div className="dashboard-card admin-card">
-              <h3 className="card-title">Post Daily Services</h3>
-              <p className="card-subtitle">Add services available at the clinic today.</p>
+              <h3 className="card-title">Daily Services</h3>
+              <p className="card-subtitle">Toggle or add services available today.</p>
               
               <form className="service-post-form" onSubmit={handleAddService}>
                 <input 
@@ -170,115 +225,31 @@ const OfficialClinic = () => {
                 <button type="submit" className="btn-submit btn-sm">Post</button>
               </form>
 
-              <ul className="posted-services-list">
-                {services.map((svc, index) => (
-                  <li key={index} className="service-management-item">
-                    <span className="service-badge active">{svc}</span>
-                    <button className="btn-remove-sm" onClick={() => handleRemoveService(index)}>&times;</button>
-                  </li>
-                ))}
-              </ul>
+              <div className="staff-toggle-list" style={{ marginTop: '15px' }}>
+                {services.map((svc) => {
+                  const currentStatus = svc.available !== undefined ? svc.available : svc.isAvailable;
+                  return (
+                    <div className="staff-toggle-item" key={svc.id}>
+                      <div className="staff-toggle-info">
+                        <span className={`service-badge ${currentStatus ? 'active' : 'inactive'}`} style={{ margin: 0, opacity: currentStatus ? 1 : 0.5 }}>
+                          {svc.serviceName}
+                        </span>
+                      </div>
+                      <label className="switch">
+                        <input 
+                          type="checkbox" 
+                          checked={currentStatus} 
+                          onChange={() => handleToggleService(svc.id, currentStatus)} 
+                        />
+                        <span className="slider round"></span>
+                      </label>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
 
-          <div className="dashboard-card">
-            <div className="table-header-flex">
-              <h3 className="card-title">Today's Patients</h3>
-              <input 
-                type="text" 
-                className="table-search" 
-                placeholder="Search patient name..." />
-            </div>
-            <div className="table-responsive">
-              <table className="official-table">
-                <thead>
-                  <tr>
-                    <th>Ref Number</th>
-                    <th>Patient Name</th>
-                    <th>Service Requested</th>
-                    <th>Time Slot</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {patients.length > 0 ? (
-                    patients.map((pt, index) => (
-                      <tr key={index}>
-                        <td><span className="ref-badge">{pt.id}</span></td>
-                        <td className="fw-600">{pt.name}</td>
-                        <td>{pt.service}</td>
-                        <td>{pt.time}</td>
-                        <td>
-                          <button 
-                            className="btn-action complete" 
-                            onClick={() => handleStatusUpdate(pt.id, 'marked as attended')}
-                          >
-                            Mark Attended
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>
-                        No patients scheduled for today.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
           </div>
-
-          <div className="dashboard-card">
-            <h3 className="card-title">Pending Appointments</h3>
-            <div className="table-responsive">
-              <table className="official-table">
-                <thead>
-                  <tr>
-                    <th>Ref Number</th>
-                    <th>Patient Name</th>
-                    <th>Date & Time</th>
-                    <th>Service Requested</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pendingAppointments.length > 0 ? (
-                    pendingAppointments.map((apt, index) => (
-                      <tr key={index}>
-                        <td><span className="ref-badge">{apt.id}</span></td>
-                        <td className="fw-600">{apt.name}</td>
-                        <td>{apt.date} at {apt.time}</td>
-                        <td>{apt.service}</td>
-                        <td className="action-cell">
-                          <button 
-                            className="btn-action approve" 
-                            onClick={() => handleStatusUpdate(apt.id, 'approved')}
-                          >
-                            Approve
-                          </button>
-                          <button 
-                            className="btn-action reject" 
-                            onClick={() => handleStatusUpdate(apt.id, 'rejected')}
-                          >
-                            Reject
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="5" style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>
-                        No pending appointment requests at this time.
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
         </section>
       </main>
 

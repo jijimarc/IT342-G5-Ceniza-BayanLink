@@ -46,14 +46,12 @@ const Sidebar = ({ onLogout }) => {
 
             <NavLink to="/schedules" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
               <span className="nav-icon"></span>
-              {/* Dynamic Label based on Role */}
-              {isOfficial ? "Schedules" : "Request Appointment"}
+              {isOfficial ? "Appointments" : "Request Appointment"}
             </NavLink>
 
             <NavLink to="/documents" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
               <span className="nav-icon"></span>
-              {/* Dynamic Label based on Role */}
-              {isOfficial ? "Documents" : "Request Documents"}
+              {isOfficial ? "Document Requests" : "Request Documents"}
             </NavLink>
             
             <div className="nav-section-label" style={{ marginTop: 'auto' }}>Account</div>

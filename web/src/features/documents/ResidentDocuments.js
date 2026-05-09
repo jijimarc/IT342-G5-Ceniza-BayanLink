@@ -15,7 +15,7 @@ const DocumentsPage = () => {
   const [pendingDocuments, setPendingDocuments] = useState([]);
   const [selectedDoc, setSelectedDoc] = useState(null);
   const displayName = user?.isGuest ? "Guest User" : (user?.fullname || user?.email || "User");
-
+  const [historyDocuments, setHistoryDocuments] = useState([]);
   const getEstimatedFee = (urgency) => {
     switch (urgency) {
       case 'Rush': return 150;
@@ -38,23 +38,22 @@ const DocumentsPage = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       if (!user || user.isGuest || !token) return;
-
       try {
         const response = await fetch(`http://localhost:8080/api/documents/user/${user.userId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+          headers: { 'Authorization': `Bearer ${token}` }
         });
-
         if (response.ok) {
           const data = await response.json();
-          setPendingDocuments(data);
+          const pending = data.filter(doc => !doc.status || doc.status.toUpperCase() === 'PENDING');
+          const history = data.filter(doc => doc.status && doc.status.toUpperCase() !== 'PENDING');
+          
+          setPendingDocuments(pending);
+          setHistoryDocuments(history);
         }
       } catch (error) {
         console.error("Failed to fetch documents:", error);
       }
     };
-
     fetchDocuments();
   }, [user, token]);
 
@@ -97,7 +96,7 @@ const DocumentsPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.documentType || !formData.purpose || !idImage) {
+    if (!formData.documentType || !formData.purpose || !formData.validId || !idImage) {
       setToast({ message: 'Please fill in all required fields and upload an ID.', type: 'error' });
       return;
     }
@@ -244,8 +243,6 @@ const DocumentsPage = () => {
                   </select>
                 </div>
                 
-
-                {/* Right Column: Textarea */}
                 <div className="form-col-right">
                   <div className="form-group h-100">
                     <label>Purpose</label>
@@ -261,7 +258,6 @@ const DocumentsPage = () => {
                 </div>
               </div>
 
-              {/* Form Actions */}
               <div className="form-actions">
                 <button type="button" className="btn-remove" onClick={handleClear}>Remove</button>
                 <button type="submit" className="btn-submit">Submit</button>
@@ -270,12 +266,9 @@ const DocumentsPage = () => {
             </form>
           </div>
 
-          {/* Dynamic Documents Grid */}
           <div className="dashboard-card">
             <h3 className="card-title">Pending Documents</h3>
             <div className="documents-grid">
-              
-              {/* Loop through the fetched documents */}
               {pendingDocuments.length > 0 ? (
                 pendingDocuments.map((doc, index) => (
                   <div className="document-item" key={index} onClick={() => setSelectedDoc(doc)} style={{ cursor: 'pointer' }}>
@@ -292,6 +285,34 @@ const DocumentsPage = () => {
             </div>
           </div>
 
+          <div className="dashboard-card" style={{ marginTop: '24px' }}>
+            <h3 className="card-title">Request History</h3>
+            <div className="documents-grid">
+              {historyDocuments.length > 0 ? (
+                historyDocuments.map((doc, index) => (
+                  <div className="document-item" key={index} onClick={() => setSelectedDoc(doc)} style={{ cursor: 'pointer', opacity: '0.8' }}>
+                    <div className="document-icon-wrapper" style={{ backgroundColor: '#f1f5f9' }}>
+                      <DocumentIcon />
+                    </div>
+                    <span className="document-label">{doc.documentType}</span>
+                    <span style={{ 
+                      fontSize: '0.7rem', 
+                      marginTop: '5px', 
+                      padding: '2px 6px', 
+                      borderRadius: '8px',
+                      backgroundColor: doc.status === 'REJECTED' ? '#fee2e2' : '#dcfce3',
+                      color: doc.status === 'REJECTED' ? '#ef4444' : '#16a34a'
+                    }}>
+                      {doc.status.replace('_', ' ')}
+                    </span>
+                  </div>
+                ))
+              ) : (
+                <p style={{ color: '#64748b', fontSize: '0.9rem' }}>No past requests found.</p>
+              )}
+            </div>
+          </div>
+
         </section>
       </main>
 
@@ -302,21 +323,22 @@ const DocumentsPage = () => {
       />
       {selectedDoc && (
         <div className="modal-overlay" onClick={() => setSelectedDoc(null)}>
-          {/* Prevent clicks inside the modal from closing it */}
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3>Document Details</h3>
               <button className="close-btn" onClick={() => setSelectedDoc(null)}>&times;</button>
             </div>
             <div className="modal-body">
-              <p><strong>Name:</strong> {displayName}</p>
+              <p><strong>Name:</strong> {selectedDoc.residentName || displayName}</p>
               <p><strong>Document:</strong> {selectedDoc.documentType}</p>
-              <p><strong>Urgency:</strong> {selectedDoc.urgencyLevel || 'Standard'}</p>
+              <p><strong>ID Provided:</strong> {selectedDoc.validIdType || 'Not specified'}</p>
+              <p><strong>Purpose:</strong> {selectedDoc.purpose || 'Not specified'}</p>
+              <p><strong>Urgency:</strong> {selectedDoc.urgency || 'Standard'}</p>
               <p><strong>Status:</strong> <span className="status-badge">{selectedDoc.status || 'Pending'}</span></p>
               
               <div className="fee-container">
                 <p className="fee-label">Estimated Fee</p>
-                <h2 className="fee-amount">₱{getEstimatedFee(selectedDoc.urgencyLevel)}</h2>
+                <h2 className="fee-amount">₱{getEstimatedFee(selectedDoc.urgency || 'Standard')}</h2>
                 <small className="fee-notice">*Please prepare this exact amount for your face-to-face retrieval at the Barangay Hall.</small>
               </div>
             </div>

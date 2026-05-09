@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from '../../shared/components/Sidebar';
 import { useAuth } from '../../shared/context/AuthContext';
+import Toast from '../../shared/components/Toast'; 
 import '../../shared/components/Layout.css';
 import './Profile.css';
 const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
 const Profile = () => {
-  const { user, token } = useAuth(); 
+  const { user, token, updateUser } = useAuth(); 
+  const [toast, setToast] = useState({ message: '', type: '' }); 
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     userId: user?.userId || '', 
@@ -15,7 +17,7 @@ const Profile = () => {
     userMiddlename: '',
     userEmail: '', 
     userBirthdate: '',
-    profileImage: '',
+    userProfileImage: '',
     age: 0,
     address: '',
     contactNumber: '',
@@ -65,7 +67,7 @@ const Profile = () => {
               userMiddlename: data.userMiddlename || '',
               userEmail: data.userEmail || user.email, 
               userBirthdate: data.userBirthdate || '',
-              profileImage: data.profileImage || '',
+              userProfileImage: data.userProfileImage || '',
               age: data.age || 0,
               address: data.address || '',
               contactNumber: data.contactNumber || '',
@@ -94,13 +96,13 @@ const Profile = () => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert("File is too large! Please choose an image under 5MB.");
+        setToast({ message: "File is too large! Please choose an image under 5MB.", type: "error" });
         return; 
       }
       
       const reader = new FileReader();
       reader.onloadend = () => {
-        setTempData(prev => ({ ...prev, profileImage: reader.result }));
+        setTempData(prev => ({ ...prev, userProfileImage: reader.result })); 
       };
       reader.readAsDataURL(file);
     }
@@ -139,12 +141,23 @@ const Profile = () => {
         if (response.ok) {
             setFormData({ ...tempData });
             setIsEditing(false);
-            alert("Profile updated!");
+            
+            setToast({ message: "Profile updated successfully!", type: "success" });
+            
+            if (updateUser && !user.isGuest) {
+              const updatedFullName = `${tempData.userFirstname} ${tempData.userLastname}`.trim();
+              updateUser({
+                ...user,
+                fullname: updatedFullName !== '' ? updatedFullName : user.email
+              });
+            }
+            
         } else {
-            alert("Update failed");
+            setToast({ message: "Update failed. Please try again.", type: "error" });
         }
     } catch (error) {
         console.error("Error updating:", error);
+        setToast({ message: "Network error occurred.", type: "error" });
     }
   };
 
@@ -167,7 +180,7 @@ const Profile = () => {
             <div className="profile-header">
               <div className="avatar-container">
                 <img 
-                  src={tempData.profileImage || DEFAULT_AVATAR} 
+                  src={tempData.userProfileImage || DEFAULT_AVATAR}
                   alt="Profile" 
                   className="profile-avatar"
                 />
@@ -189,7 +202,6 @@ const Profile = () => {
             </div>
 
             <div className="profile-form">
-              {/* --- 1. CORE IDENTITY (All Users) --- */}
               <h4 className="form-section-title">Personal Information</h4>
               <div className="form-row split">
                 <div className="input-group">
@@ -228,7 +240,6 @@ const Profile = () => {
                 </div>
               </div>
 
-              {/* --- 2. DEMOGRAPHICS (All Users) --- */}
               <h4 className="form-section-title" style={{ marginTop: '24px' }}>Demographics & Status</h4>
               <div className="form-row">
                 <div className="input-group">
@@ -261,7 +272,6 @@ const Profile = () => {
                 </div>
               </div>
 
-              {/* --- 3. OFFICIAL ONLY FIELDS --- */}
               {user?.role === 'Official' && (
                 <>
                   <h4 className="form-section-title" style={{ marginTop: '24px', color: '#0284c7' }}>Official Appointment Details</h4>
@@ -284,7 +294,6 @@ const Profile = () => {
                 </>
               )}
 
-              {/* --- ACTIONS --- */}
               <div className="profile-actions" style={{ marginTop: '30px', paddingTop: '20px', borderTop: '1px solid #e2e8f0' }}>
                 {!isEditing ? (
                   <div>
@@ -308,6 +317,8 @@ const Profile = () => {
           </div>
         </section>
       </main>
+
+      <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: '' })} />
     </div>
   );
 };

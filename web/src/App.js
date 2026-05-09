@@ -17,7 +17,6 @@ import ResidentDashboard from './features/dashboard/ResidentDashboard';
 import OfficialDashboard from './features/dashboard/OfficialDashboard';
 
 // --- Clinic Feature ---
-import ResidentClinic from './features/clinic/ResidentClinic';
 import OfficialClinic from './features/clinic/OfficialClinic';
 
 // --- Documents Feature ---
@@ -87,7 +86,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <RoleRoute 
-                  residentComponent={ResidentClinic} 
                   officialComponent={OfficialClinic} 
                 />
               </ProtectedRoute>
