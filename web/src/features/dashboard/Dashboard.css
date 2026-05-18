@@ -1,0 +1,378 @@
+.announcements-placeholder {
+  background-color: #f1f5f9;
+  height: 200px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #cbd5e1;
+}
+
+.appointments-placeholder {
+  background-color: #f1f5f9;
+  height: 140px; 
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #cbd5e1;
+}
+
+.empty-state {
+  height: 100%;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #94a3b8;
+}
+
+.placeholder-text {
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.documents-grid {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap; 
+}
+
+.document-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  width: 120px;
+  cursor: pointer;
+}
+
+.document-icon-wrapper {
+  width: 90px;
+  height: 110px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  transition: all 0.2s ease-in-out;
+}
+
+.document-item:hover .document-icon-wrapper {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 6px rgba(59, 130, 246, 0.15);
+  transform: translateY(-2px);
+}
+
+.document-svg {
+  width: 48px;
+  height: auto;
+  fill: #334155;
+  transition: fill 0.2s ease;
+}
+
+.document-item:hover .document-svg {
+  fill: #3b82f6; 
+}
+
+.document-label {
+  font-size: 0.8rem;
+  color: #475569;
+  text-align: center;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 12px;
+}
+
+.card-header-flex .card-title {
+  margin: 0;
+  border: none;
+  padding: 0;
+}
+
+.announcement-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.announcement-item {
+  background-color: #f8fafc;
+  border-left: 4px solid #3b82f6;
+  padding: 16px;
+  border-radius: 4px;
+}
+
+.announcement-date {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #64748b;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.announcement-text {
+  margin: 0;
+  color: #334155;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.empty-state-box {
+  padding: 30px;
+  text-align: center;
+  color: #94a3b8;
+  font-style: italic;
+  background-color: #f8fafc;
+  border-radius: 8px;
+  border: 1px dashed #cbd5e1;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.action-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 !important; 
+  overflow: hidden;
+}
+
+.action-card-content {
+  padding: 24px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.action-icon {
+  font-size: 2.5rem;
+  background-color: #f1f5f9;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+}
+
+.doc-icon { background-color: #e0f2fe; }
+.sched-icon { background-color: #fef3c7; }
+
+.action-details h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  color: #1e293b;
+}
+
+.stat-highlight {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 4px 0;
+}
+
+.action-desc {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.btn-action-full {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  text-align: center;
+}
+
+.btn-action-full.primary {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.btn-action-full.primary:hover {
+  background-color: #2563eb;
+}
+
+.clinic-status-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 24px; 
+}
+
+.clinic-staff-card {
+  flex: 7;
+  position: relative;
+}
+
+.clinic-services-card {
+  flex: 3; 
+}
+
+.staff-chips-container {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.staff-chip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.staff-avatar {
+  width: 35px;
+  height: 35px;
+  background: #3b82f6;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+}
+
+.staff-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.staff-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.staff-dept {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.services-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.service-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.service-badge.active {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.service-badge.inactive {
+  background: #f1f5f9;
+  color: #94a3b8;
+  border: 1px solid #e2e8f0;
+  text-decoration: line-through;
+}
+
+.presence-control {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  position: absolute;
+  top: 15px;   
+  right: 15px;
+}
+
+.status-indicator.online { background-color: #22c55e; box-shadow: 0 0 8px #22c55e; }
+.status-indicator.offline { background-color: #94a3b8; }
+
+.status-dot-mini {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.status-dot-mini.online { background: #22c55e; }
+.status-dot-mini.offline { background: #94a3b8; }
+
+.presence-text {
+  font-size: 0.9rem;
+  color: #475569;
+}
+
+.btn-toggle {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.services-manager-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.service-toggle-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.service-toggle-item:hover {
+  background: #f1f5f9;
+}
+
+.service-toggle-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.toggle-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #334155;
+}

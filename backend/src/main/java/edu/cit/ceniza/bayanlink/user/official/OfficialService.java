@@ -1,0 +1,52 @@
+package edu.cit.ceniza.bayanlink.user.official;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class OfficialService {
+
+    private final OfficialRepository officialRepository;
+
+    public OfficialDTO getOfficialByUserId(Integer userId) {
+        Official official = officialRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new RuntimeException("Official profile not found for user ID: " + userId));
+        return convertToDTO(official);
+    }
+
+    public List<OfficialDTO> getAllOfficials() {
+        List<Official> officials = officialRepository.findAll();
+        
+        return officials.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public OfficialDTO updatePresence(Integer userId, boolean status) {
+        Official official = officialRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new RuntimeException("Official not found"));
+
+        official.setPresent(status);
+        officialRepository.save(official);
+
+        return convertToDTO(official);
+    }
+
+    private OfficialDTO convertToDTO(Official official) {
+        OfficialDTO dto = new OfficialDTO();
+        dto.setUserId(official.getUser().getUserId());
+        dto.setFullName(official.getUser().getUserFirstname() + " " + official.getUser().getUserLastname());
+        dto.setUserEmail(official.getUser().getUserEmail());
+        dto.setAddress(official.getAddress());
+        dto.setContactNumber(official.getContactNumber());
+        dto.setPositionTitle(official.getPosition());
+        dto.setTermStart(official.getTermStart());
+        dto.setTermEnd(official.getTermEnd());
+        dto.setPresent(official.isPresent());
+        return dto;
+    }
+}
