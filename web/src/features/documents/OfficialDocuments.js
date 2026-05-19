@@ -70,6 +70,39 @@ const OfficialDocuments = () => {
     }
   };
 
+  const handleProcessAndPrint = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/documents/${id}/process`, {
+        method: 'POST',
+        headers: { 
+          'Authorization': `Bearer ${token}` 
+        }
+      });
+
+      if (response.ok) {
+        const htmlContent = await response.text();
+        const printWindow = window.open('', '_blank', 'width=800,height=900');
+
+        printWindow.document.open();
+        printWindow.document.write(htmlContent);
+        printWindow.document.close();
+        printWindow.onload = () => {
+          printWindow.print();
+        };
+
+        setToast({ message: `Document generated successfully!`, type: 'success' });
+        setSelectedDoc(null);
+        fetchAllDocuments(); 
+      } else {
+        const errorText = await response.text();
+        setToast({ message: `Failed to process: ${errorText}`, type: 'error' });
+      }
+    } catch (error) {
+      console.error("Error processing document:", error);
+      setToast({ message: 'Network error occurred during generation.', type: 'error' });
+    }
+  };
+   
   return (
     <div className="dashboard-wrapper">
       <Sidebar onLogout={handleLogoutClick} />
@@ -223,11 +256,13 @@ const OfficialDocuments = () => {
               >
                 Reject Request
               </button>
+              
               <button 
-                className="btn-action complete" 
-                onClick={() => handleUpdateStatus(selectedDoc.requestId, 'READY_FOR_PICKUP')}
+                className="btn-action" 
+                style={{ backgroundColor: '#2563eb', color: 'white', padding: '8px 16px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
+                onClick={() => handleProcessAndPrint(selectedDoc.requestId)}
               >
-                Mark "Ready for Pickup"
+                Process & Print Document
               </button>
             </div>
           </div>

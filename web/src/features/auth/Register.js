@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import './AuthPage.css';
 import Toast from '../../shared/components/Toast';
+import BayanLinkLogo from './Logo.png';
 
 const EyeIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -19,6 +20,7 @@ const EyeOffIcon = () => (
 
 const Register = () => {
   const [toast, setToast] = useState({ message: '', type: '' });
+  const [errors, setErrors] = useState({}); 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
@@ -32,23 +34,32 @@ const Register = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    if (errors[e.target.name]) {
+      setErrors({ ...errors, [e.target.name]: '' });
+    }
   };
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    let newErrors = {};
 
     if (!formData.userEmail.endsWith("@gmail.com")) {
-      return setToast({ message: 'Only @gmail.com addresses are allowed.', type: 'error' });
+      newErrors.userEmail = 'Only @gmail.com addresses are allowed.';
     }
     
     // eslint-disable-next-line no-useless-escape
     const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/;
     if (!passwordRegex.test(formData.userPassword)) {
-      return setToast({ message: 'Password needs at least 1 number and 1 special character.', type: 'error' });
+      newErrors.userPassword = 'Password needs at least 1 number and 1 special character.';
     }
 
     if (formData.userPassword !== formData.confirmPassword) {
-      return setToast({ message: 'Passwords do not match.', type: 'error' });
+      newErrors.confirmPassword = 'Passwords do not match.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
     }
 
     try {
@@ -70,15 +81,24 @@ const Register = () => {
       }
     } catch (error) {
       console.error("Error connecting to backend:", error);
-      setToast({ message: 'Error occured during registration.', type: 'error' });
+      setToast({ message: 'Error occurred during registration.', type: 'error' });
     }
   };
 
   return (
     <div className="auth-page-wrapper">
       <div className="auth-hero-section">
-        <h1>Join Us</h1>
-        <p>Create an account to start managing your portal services today.</p>
+        <img 
+          src={BayanLinkLogo} 
+          alt="BayanLink Logo" 
+          className="auth-logo" 
+        />
+        <h1>Join BayanLink</h1>
+        <p style={{ lineHeight: '1.6', maxWidth: '80%' }}>
+          Create an account to connect with your community. Experience faster processing 
+          for barangay clearances, easily book facilities, and receive important updates 
+          right at your fingertips.
+        </p>
       </div>
       <div className="auth-form-section">
         <div className="auth-card">
@@ -95,28 +115,33 @@ const Register = () => {
                 placeholder="name@company.com"
                 required 
               />
+              {errors.userEmail && <span style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>{errors.userEmail}</span>}
             </div>
+            
             <div className="input-group">
               <label>First Name</label>
               <input 
                 name="userFirstName"
-                type="name" 
+                type="text" 
                 className="auth-input"
                 onChange={handleChange}
                 placeholder="Juan"
                 required 
               />
-            </div><div className="input-group">
+            </div>
+            
+            <div className="input-group">
               <label>Last Name</label>
               <input 
                 name="userLastName"
-                type="name" 
+                type="text" 
                 className="auth-input"
                 onChange={handleChange}
                 placeholder="Dela Cruz"
                 required 
               />
             </div>
+            
             <div className="input-group">
               <label>Password</label>
               <div className="password-input-wrapper">
@@ -138,7 +163,9 @@ const Register = () => {
                   {showPassword ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
+              {errors.userPassword && <span style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>{errors.userPassword}</span>}
             </div>
+            
             <div className="input-group">
               <label>Confirm Password</label>
               <div className="password-input-wrapper">
@@ -146,7 +173,7 @@ const Register = () => {
                   name="confirmPassword"
                   type={showConfirmPassword ? "text" : "password"} 
                   className="auth-input"
-                  value={formData.confirmPassword} // Keep it controlled
+                  value={formData.confirmPassword}
                   onChange={handleChange}
                   placeholder="*********"
                   required 
@@ -159,7 +186,9 @@ const Register = () => {
                   {showConfirmPassword ? <EyeOffIcon /> : <EyeIcon />}
                 </button>
               </div>
+              {errors.confirmPassword && <span style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>{errors.confirmPassword}</span>}
             </div>
+            
             <button type="submit" className="auth-btn btn-primary">Create Account</button>
             <div className="auth-footer">
               Already have an account? <Link to="/login" className="auth-link">Login</Link>

@@ -96,6 +96,11 @@
   transition: all 0.2s;
 }
 
+.auth-logo {
+  width: 400px;
+  height: auto;
+}
+
 .auth-input:focus {
   outline: none;
   border-color: #3b82f6;
@@ -190,4 +195,11 @@
 
 .password-toggle:hover {
   color: #3b82f6;
+}
+
+.error-message {
+  color: #ef4444;
+  font-size: 0.8rem;
+  margin-top: 4px;
+  display: block;
 }
