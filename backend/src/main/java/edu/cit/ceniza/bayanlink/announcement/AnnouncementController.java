@@ -9,19 +9,17 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/announcements")
-@CrossOrigin(origins = "http://localhost:3000") // Allowing React frontend
+@CrossOrigin(origins = "*")
 public class AnnouncementController {
 
     @Autowired
     private AnnouncementService announcementService;
 
-    // 1. Get all announcements (Visible to Residents and Officials)
     @GetMapping
     public ResponseEntity<List<Announcement>> getAnnouncements() {
         return ResponseEntity.ok(announcementService.getAllAnnouncements());
     }
 
-    // 2. Post an announcement (Official Only)
     @PostMapping
     public ResponseEntity<Announcement> postAnnouncement(@RequestBody Map<String, Object> payload) {
         String title = (String) payload.get("title");
@@ -31,7 +29,6 @@ public class AnnouncementController {
         return ResponseEntity.ok(announcementService.createAnnouncement(title, content, userId));
     }
 
-    // 3. Delete an announcement
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteAnnouncement(@PathVariable Long id) {
         announcementService.deleteAnnouncement(id);

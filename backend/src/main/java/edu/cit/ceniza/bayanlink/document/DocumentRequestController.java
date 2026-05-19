@@ -1,7 +1,9 @@
 package edu.cit.ceniza.bayanlink.document;
 
+import edu.cit.ceniza.bayanlink.user.official.Official;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -14,6 +16,7 @@ import java.util.List;
 public class DocumentRequestController {
 
     private final DocumentRequestService documentRequestService;
+    DocumentGenerationService documentGenerateService = new DocumentGenerationService();
 
     @PostMapping("/request")
     public ResponseEntity<?> submitDocumentRequest(
@@ -68,5 +71,20 @@ public class DocumentRequestController {
     public ResponseEntity<List<DocumentRequest>> getAllRequests() {
         List<DocumentRequest> allDocs = documentRequestService.getAllRequests();
         return ResponseEntity.ok(allDocs);
+    }
+
+    @PostMapping("/{requestId}/process")
+    public ResponseEntity<String> processDocument(
+            @PathVariable Long requestId,
+            @AuthenticationPrincipal Official processingOfficial) {
+
+        try {
+            String readyToPrintHtml = documentGenerateService.processAndGenerateDocument(requestId, processingOfficial);
+
+            return ResponseEntity.ok(readyToPrintHtml);
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error processing document: " + e.getMessage());
+        }
     }
 }
