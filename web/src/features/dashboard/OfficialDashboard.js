@@ -8,7 +8,7 @@ import Toast from '../../shared/components/Toast';
 
 const OfficialDashboard = () => {
   const navigate = useNavigate();
-  const { user, token, logout } = useAuth();
+  const { user, token } = useAuth();
   const [toast, setToast] = useState({ message: '', type: '' });
   const displayName = user?.fullname || "Official User";
   const [announcements, setAnnouncements] = useState([]);
@@ -85,14 +85,6 @@ const OfficialDashboard = () => {
 
   }, [token, fetchAnnouncements]); 
 
-  const handleLogoutClick = () => {
-    setToast({ message: 'Logging out successfully...', type: 'info' });
-    setTimeout(() => {
-      logout();
-      navigate('/login');
-    }, 1500);
-  };
-
   const handlePostAnnouncement = async (e) => {
     e.preventDefault();
     if (!newAnnouncementTitle.trim() || !newAnnouncementContent.trim()) return;
@@ -129,7 +121,7 @@ const OfficialDashboard = () => {
 
   return (
     <div className="dashboard-wrapper">
-      <Sidebar onLogout={handleLogoutClick} />
+      <Sidebar />
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-title">

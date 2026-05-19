@@ -9,7 +9,7 @@ import { StaffIcon } from '../../shared/components/Icons';
 
 const OfficialClinic = () => {
   const navigate = useNavigate();
-  const { user, token, logout } = useAuth(); 
+  const { user, token } = useAuth(); 
   const [toast, setToast] = useState({ message: '', type: '' });
   const displayName = user?.fullname || "Official User";
   
@@ -69,14 +69,6 @@ const OfficialClinic = () => {
       fetchServices(); 
     }
   }, [token]);
-
-  const handleLogoutClick = () => {
-    setToast({ message: 'Logging out successfully...', type: 'info' });
-    setTimeout(() => {
-      logout();
-      navigate('/login');
-    }, 1500);
-  };
 
   const handleToggleStaff = async (id, currentStatus) => {
     const newStatus = !currentStatus; 
@@ -158,8 +150,7 @@ const OfficialClinic = () => {
 
   return (
     <div className="dashboard-wrapper">
-      <Sidebar onLogout={handleLogoutClick} />
-      
+      <Sidebar />
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-title">

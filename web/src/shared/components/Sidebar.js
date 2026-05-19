@@ -1,19 +1,24 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import { useAuth } from '../context/AuthContext'; 
+import Toast from './Toast';
 
-/**
- * OBSERVER PATTERN IMPLEMENTATION
- * * Subject (Observable): AuthContext (specifically the state inside it).
- * * Observer: This Sidebar component.
- * * Purpose: The Sidebar "subscribes" to the AuthContext. When the authentication 
- * state changes (e.g., user logs in or out), the Context automatically notifies 
- * this component, triggering a re-render to update the navigation links dynamically.
- */
 const Sidebar = ({ onLogout }) => {
-  const { user } = useAuth();
-  const isOfficial = user?.role === 'Official' || user?.role === 'Admin';
+  const { user, logout } = useAuth();
+  const isOfficial = user?.role === 'Official';
+  const isAdmin = user?.role === 'Admin';
+  const [toast, setToast] = useState({ message: '', type: '' });
+  const navigate = useNavigate();
+
+  const handleStandardizedLogout = (e) => {
+    e.preventDefault();
+    setToast({ message: 'Logging out successfully...', type: 'info' });
+    setTimeout(() => {
+      logout();
+      navigate('/login');
+    }, 1000);
+  };
 
   return (
     <aside className="sidebar">
@@ -35,34 +40,46 @@ const Sidebar = ({ onLogout }) => {
               <span className="nav-icon"></span>
               Profile
             </NavLink>
+
+            {isAdmin && (
+               <>
+                 <div className="nav-section-label">System</div>
+                 <NavLink to="/admin/users" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+                   <span className="nav-icon"></span>
+                   Manage Users
+                 </NavLink>
+               </>
+            )}
             
-            {user?.role === 'Official' && (
-              <NavLink to="/clinic" className="nav-item">
+            {isOfficial && (
+              <NavLink to="/clinic" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+                <span className="nav-icon"></span>
                 Clinic Management
               </NavLink>
             )}
 
-            <div className="nav-section-label">Services</div>
+            {!isAdmin && (
+              <>
+                <div className="nav-section-label">Services</div>
 
-            <NavLink to="/schedules" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-              <span className="nav-icon"></span>
-              {isOfficial ? "Appointments" : "Request Appointment"}
-            </NavLink>
+                <NavLink to="/schedules" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+                  <span className="nav-icon"></span>
+                  {isOfficial ? "Appointments" : "Request Appointment"}
+                </NavLink>
 
-            <NavLink to="/documents" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
-              <span className="nav-icon"></span>
-              {isOfficial ? "Document Requests" : "Request Documents"}
-            </NavLink>
+                <NavLink to="/documents" className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}>
+                  <span className="nav-icon"></span>
+                  {isOfficial ? "Document Requests" : "Request Documents"}
+                </NavLink>
+              </>
+            )}
             
             <div className="nav-section-label" style={{ marginTop: 'auto' }}>Account</div>
 
             <NavLink 
               to="/login" 
               className={({ isActive }) => isActive ? "nav-item active" : "nav-item"}
-              onClick={(e) => {
-                e.preventDefault(); 
-                if (onLogout) onLogout(); 
-              }}
+              onClick={handleStandardizedLogout}
             >
               <span className="nav-icon"></span>
               Logout
@@ -79,6 +96,7 @@ const Sidebar = ({ onLogout }) => {
       <div className="sidebar-footer">
         <div className="version-tag">v1.0.0 Desktop</div>
       </div>
+      <Toast message={toast.message} type={toast.type} onClose={() => setToast({ message: '', type: '' })} />
     </aside>
   );
 };

@@ -3,6 +3,7 @@ package edu.cit.ceniza.bayanlink.user.official;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +21,9 @@ public class OfficialService {
 
     public List<OfficialDTO> getAllOfficials() {
         List<Official> officials = officialRepository.findAll();
-        
+
         return officials.stream()
+                .sorted(Comparator.comparing(o -> o.getUser().getUserId()))
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }

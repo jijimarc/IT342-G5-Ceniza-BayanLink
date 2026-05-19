@@ -8,7 +8,7 @@ import Toast from '../../shared/components/Toast';
 
 const AppointmentsPage = () => {
   const navigate = useNavigate();
-  const { user, token, logout } = useAuth();
+  const { user, token } = useAuth();
   const [toast, setToast] = useState({ message: '', type: '' });
   const today = new Date().toISOString().split('T')[0];
   const displayName = user?.isGuest ? "Guest User" : (user?.fullname || user?.email || "User");
@@ -34,14 +34,6 @@ const AppointmentsPage = () => {
       setSummary('');
     }
   }, [formData]);
-
-  const handleLogoutClick = () => {
-    setToast({ message: 'Logging out successfully...', type: 'info' });
-    setTimeout(() => {
-      logout();
-      navigate('/login');
-    }, 1500);
-  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -96,8 +88,7 @@ const AppointmentsPage = () => {
 
   return (
     <div className="dashboard-wrapper">
-      <Sidebar onLogout={handleLogoutClick} />
-      
+      <Sidebar />
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-title">
@@ -129,7 +120,9 @@ const AppointmentsPage = () => {
                       onChange={handleChange}
                     >
                       <option value="" disabled>Select a service</option>
-                      <option value="Clinic Check-up">Clinic Visit</option>
+                      <option value="Clinic Check-up">Clinic Check-up</option>
+                      <option value="Document Pick-up">Document Pick-up</option>
+                      <option value="Barangay Official Meeting">Barangay Hearing Attendance</option>
                       <option value="Counseling">Captain Counseling</option>
                     </select>
                   </div>
