@@ -34,35 +34,35 @@ export const AuthProvider = ({ children }) => {
         }),
       });
 
-      const jsonResponse = await response.json();
-      if (response.ok) { 
-        const payload = jsonResponse; 
-        const rawRole = payload.userRole || 'Resident'; 
-        const formattedRole = rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase();
-        
-        const fName = payload.userFirstname || '';
-        const lName = payload.userLastname || '';
-        const fullName = `${fName} ${lName}`.trim();
-
-        const userData = {
-          userId: payload.userId, 
-          email: payload.userEmail,
-          fullname: fullName !== '' ? fullName : payload.userEmail,
-          role: formattedRole,
-          isGuest: false
-        };
-
-        setToken(payload.token);
-        setUser(userData);
-
-        localStorage.setItem('token', payload.token);
-        localStorage.setItem('user', JSON.stringify(userData));
-
-        return { success: true };
-      } else {
-        const errorMessage = jsonResponse.message || "Invalid credentials";
-        return { success: false, message: errorMessage };
+      if (!response.ok) { 
+        return { success: false, message: "Invalid Email or Password" };
       }
+
+      const payload = await response.json(); 
+      
+      const rawRole = payload.userRole || 'Resident'; 
+      const formattedRole = rawRole.charAt(0).toUpperCase() + rawRole.slice(1).toLowerCase();
+      
+      const fName = payload.userFirstname || '';
+      const lName = payload.userLastname || '';
+      const fullName = `${fName} ${lName}`.trim();
+
+      const userData = {
+        userId: payload.userId, 
+        email: payload.userEmail,
+        fullname: fullName !== '' ? fullName : payload.userEmail,
+        role: formattedRole,
+        isGuest: false
+      };
+
+      setToken(payload.token);
+      setUser(userData);
+
+      localStorage.setItem('token', payload.token || '');
+      localStorage.setItem('user', JSON.stringify(userData));
+
+      return { success: true };
+      
     } catch (error) {
       console.error("Login error:", error);
       return { success: false, message: "Server connection failed" };

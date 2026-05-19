@@ -9,7 +9,7 @@ import { DocumentIcon } from '../../shared/components/Icons';
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { user, token, logout } = useAuth(); 
+  const { user, token } = useAuth(); 
   const [toast, setToast] = useState({ message: '', type: '' }); 
   const displayName = user?.isGuest ? "Guest User" : (user?.fullname || "User");
 
@@ -87,19 +87,9 @@ const Dashboard = () => {
         .catch(err => console.error("Error fetching appointments:", err));
     }
   }, [token, user]);
-
-  const handleLogoutClick = () => {
-    setToast({ message: 'Logging out successfully...', type: 'info' });
-    setTimeout(() => {
-      logout(); 
-      navigate('/login'); 
-    }, 1500);
-  };
-
   return (
     <div className="dashboard-wrapper">
-      <Sidebar onLogout={handleLogoutClick} />
-      
+      <Sidebar />
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-title">

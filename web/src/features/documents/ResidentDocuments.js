@@ -9,7 +9,7 @@ import { DocumentIcon } from '../../shared/components/Icons';
 
 const DocumentsPage = () => {
   const navigate = useNavigate();
-  const { user, token, logout } = useAuth();
+  const { user, token } = useAuth();
   const [toast, setToast] = useState({ message: '', type: '' });
   const [idImage, setIdImage] = useState(null);
   const [pendingDocuments, setPendingDocuments] = useState([]);
@@ -33,8 +33,6 @@ const DocumentsPage = () => {
     urgencyLevel: 'Standard'
   });
   
-  
-
   useEffect(() => {
     const fetchDocuments = async () => {
       if (!user || user.isGuest || !token) return;
@@ -56,14 +54,6 @@ const DocumentsPage = () => {
     };
     fetchDocuments();
   }, [user, token]);
-
-  const handleLogoutClick = () => {
-    setToast({ message: 'Logging out successfully...', type: 'info' });
-    setTimeout(() => {
-      logout();
-      navigate('/login');
-    }, 1500);
-  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -139,8 +129,7 @@ const DocumentsPage = () => {
 
   return (
     <div className="dashboard-wrapper">
-      <Sidebar onLogout={handleLogoutClick} />
-      
+
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-title">
@@ -156,7 +145,6 @@ const DocumentsPage = () => {
         </header>
 
         <section className="dashboard-body">
-          
           <div className="dashboard-card">
             <h3 className="card-title">New Request</h3>
             <form className="request-form" onSubmit={handleSubmit}>

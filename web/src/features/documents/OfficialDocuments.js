@@ -8,7 +8,7 @@ import Toast from '../../shared/components/Toast';
 
 const OfficialDocuments = () => {
   const navigate = useNavigate();
-  const { user, token, logout } = useAuth();
+  const { user, token } = useAuth();
   const [toast, setToast] = useState({ message: '', type: '' });
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [documentRequests, setDocumentRequests] = useState([]); 
@@ -33,12 +33,7 @@ const OfficialDocuments = () => {
   useEffect(() => {
     fetchAllDocuments();
   }, [token, fetchAllDocuments]);
-
-  const handleLogoutClick = () => {
-    logout();
-    navigate('/login');
-  };
-
+  
   const handleReviewClick = (doc) => {
     setSelectedDoc(doc);
   };
@@ -70,43 +65,9 @@ const OfficialDocuments = () => {
     }
   };
 
-  const handleProcessAndPrint = async (id) => {
-    try {
-      const response = await fetch(`http://localhost:8080/api/documents/${id}/process`, {
-        method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${token}` 
-        }
-      });
-
-      if (response.ok) {
-        const htmlContent = await response.text();
-        const printWindow = window.open('', '_blank', 'width=800,height=900');
-
-        printWindow.document.open();
-        printWindow.document.write(htmlContent);
-        printWindow.document.close();
-        printWindow.onload = () => {
-          printWindow.print();
-        };
-
-        setToast({ message: `Document generated successfully!`, type: 'success' });
-        setSelectedDoc(null);
-        fetchAllDocuments(); 
-      } else {
-        const errorText = await response.text();
-        setToast({ message: `Failed to process: ${errorText}`, type: 'error' });
-      }
-    } catch (error) {
-      console.error("Error processing document:", error);
-      setToast({ message: 'Network error occurred during generation.', type: 'error' });
-    }
-  };
-   
   return (
     <div className="dashboard-wrapper">
-      <Sidebar onLogout={handleLogoutClick} />
-      
+      <Sidebar />
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-title">
@@ -256,13 +217,11 @@ const OfficialDocuments = () => {
               >
                 Reject Request
               </button>
-              
               <button 
-                className="btn-action" 
-                style={{ backgroundColor: '#2563eb', color: 'white', padding: '8px 16px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 'bold' }}
-                onClick={() => handleProcessAndPrint(selectedDoc.requestId)}
+                className="btn-action complete" 
+                onClick={() => handleUpdateStatus(selectedDoc.requestId, 'READY_FOR_PICKUP')}
               >
-                Process & Print Document
+                Mark "Ready for Pickup"
               </button>
             </div>
           </div>

@@ -9,7 +9,7 @@ import { StaffIcon } from '../../shared/components/Icons';
 
 const OfficialAppointments = () => {
   const navigate = useNavigate();
-  const { user, token, logout } = useAuth();
+  const { user, token } = useAuth();
   const [toast, setToast] = useState({ message: '', type: '' });
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [clinicSchedule, setClinicSchedule] = useState([]);
@@ -126,18 +126,9 @@ const OfficialAppointments = () => {
     }
   };
 
-  const handleLogoutClick = () => {
-    setToast({ message: 'Logging out successfully...', type: 'info' });
-    setTimeout(() => {
-      logout();
-      navigate('/login');
-    }, 1500);
-  };
-
   return (
     <div className="dashboard-wrapper">
-      <Sidebar onLogout={handleLogoutClick} />
-      
+      <Sidebar />
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-title">
