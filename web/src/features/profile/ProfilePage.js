@@ -4,9 +4,8 @@ import { useAuth } from '../../shared/context/AuthContext';
 import Toast from '../../shared/components/Toast'; 
 import '../../shared/components/Layout.css';
 import './Profile.css';
-const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 import { API_BASE_URL } from '../../shared/utils/config';
-
+const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 const Profile = () => {
   const { user, token, updateUser } = useAuth(); 
   const [toast, setToast] = useState({ message: '', type: '' }); 

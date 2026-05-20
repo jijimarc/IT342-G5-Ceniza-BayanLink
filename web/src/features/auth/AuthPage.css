@@ -18,7 +18,7 @@
 
 .auth-hero-section {
   flex: 1.2;
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  background-color: #0a192f;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -47,6 +47,20 @@
   justify-content: center;
   background: white;
   height: 100%;
+}
+
+.auth-logo {   
+  width: auto;          
+  height: 350px;           
+  margin-bottom: 24px;   
+  filter: drop-shadow(0px 0px 10px rgba(255, 255, 255, 0.1));
+  transition: transform 0.3s ease;
+}
+
+@media (min-width: 1400px) {
+  .auth-logo {
+    max-width: 450px;
+  }
 }
 
 .auth-card {

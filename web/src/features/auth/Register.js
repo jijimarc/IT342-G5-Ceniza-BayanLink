@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './AuthPage.css';
 import Toast from '../../shared/components/Toast';
 import { API_BASE_URL } from '../../shared/utils/config';
+import BayanLinkLogo from './Logo.png';
 
 const EyeIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -78,6 +79,11 @@ const Register = () => {
   return (
     <div className="auth-page-wrapper">
       <div className="auth-hero-section">
+        <img 
+          src={BayanLinkLogo} 
+          alt="BayanLink Logo" 
+          className="auth-logo" 
+        />
         <h1>Join Us</h1>
         <p>Create an account to start managing your portal services today.</p>
       </div>
