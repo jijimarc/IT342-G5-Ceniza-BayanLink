@@ -22,8 +22,8 @@ const OfficialDocuments = () => {
     })
       .then(res => res.json())
       .then(data => {
-        const pending = data.filter(doc => !doc.status || doc.status.toUpperCase() === 'PENDING');
-        const history = data.filter(doc => doc.status && doc.status.toUpperCase() !== 'PENDING');
+        const pending = data.filter(doc => !doc.status || doc.status.toUpperCase().includes('PENDING'));
+        const history = data.filter(doc => doc.status && !doc.status.toUpperCase().includes('PENDING'));
         
         setDocumentRequests(pending);
         setHistoryRequests(history);
@@ -62,6 +62,35 @@ const OfficialDocuments = () => {
       }
     } catch (error) {
       console.error("Error updating status:", error);
+      setToast({ message: 'Network error occurred.', type: 'error' });
+    }
+  };
+
+  const handleGenerateDocument = async (id) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/documents/${id}/process`, {
+        method: 'POST',
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json' 
+        }
+      });
+
+      if (response.ok) {
+        const htmlString = await response.text(); 
+        const newWindow = window.open('', '_blank');
+        newWindow.document.write(htmlString);
+        newWindow.document.close();
+
+        setToast({ message: `Document ${id} Generated successfully!`, type: 'success' });
+        setSelectedDoc(null);
+        fetchAllDocuments(); 
+      } else {
+        const errorText = await response.text();
+        setToast({ message: `Failed to generate: ${errorText}`, type: 'error' });
+      }
+    } catch (error) {
+      console.error("Error generating document:", error);
       setToast({ message: 'Network error occurred.', type: 'error' });
     }
   };
@@ -142,7 +171,7 @@ const OfficialDocuments = () => {
                     <th>Resident Name</th>
                     <th>Document Type</th>
                     <th>Final Status</th>
-                    <th>Date Requested</th>
+                    <th>Date Processed</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -156,7 +185,7 @@ const OfficialDocuments = () => {
                           fontWeight: 'bold',
                           color: doc.status === 'REJECTED' ? '#ef4444' : '#16a34a' 
                         }}>
-                          {doc.status.replace('_', ' ')}
+                          {doc.status.replaceAll('_', ' ')}
                         </span>
                       </td>
                       <td>{doc.requestDate}</td>
@@ -183,7 +212,6 @@ const OfficialDocuments = () => {
             <div className="modal-body doc-review-body">
               <div className="doc-details-col">
                 <h4 style={{ marginTop: 0 }}>Request Details</h4>
-                {/* FIX: Display all the correct backend variables */}
                 <p><strong>Resident:</strong> {selectedDoc.residentName || 'Unknown Resident'}</p>
                 <p><strong>Document:</strong> {selectedDoc.documentType}</p>
                 <p><strong>Urgency:</strong> {selectedDoc.urgency || 'Standard'}</p>
@@ -195,7 +223,6 @@ const OfficialDocuments = () => {
               
               <div className="doc-id-col">
                 <h4 style={{ marginTop: 0 }}>ID Verification</h4>
-                {/* FIX: Use validIdType instead of validId */}
                 <p style={{ fontSize: '0.85rem', color: '#64748b' }}>Provided: {selectedDoc.validIdType || 'ID Document'}</p>
                 <div className="id-image-placeholder" style={{ padding: 0, overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', backgroundColor: '#f1f5f9' }}>
                   {selectedDoc.requirementURL ? (
@@ -218,11 +245,12 @@ const OfficialDocuments = () => {
               >
                 Reject Request
               </button>
+              
               <button 
                 className="btn-action complete" 
-                onClick={() => handleUpdateStatus(selectedDoc.requestId, 'READY_FOR_PICKUP')}
+                onClick={() => handleGenerateDocument(selectedDoc.requestId)}
               >
-                Mark "Ready for Pickup"
+                Process & Generate Document
               </button>
             </div>
           </div>

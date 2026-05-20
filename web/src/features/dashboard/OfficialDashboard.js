@@ -58,16 +58,16 @@ const OfficialDashboard = () => {
       .then(data => setServices(data))
       .catch(err => console.error("Error fetching services:", err));
 
-    fetch(`${API_BASE_URL}/api/documents/pending`, {
+    fetch(`${API_BASE_URL}/api/documents/all`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => {
-        if (!res.ok) throw new Error("Failed to fetch pending documents");
+        if (!res.ok) throw new Error("Failed to fetch documents");
         return res.json();
       })
       .then(data => {
          const pending = data.filter(doc => 
-            !doc.status || doc.status.toUpperCase() === 'PENDING_APPROVAL'
+            !doc.status || doc.status.toUpperCase().includes('PENDING')
          );
          setPendingDocsCount(pending.length);
       })

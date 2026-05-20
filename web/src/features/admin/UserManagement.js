@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Sidebar from '../../shared/components/Sidebar';
 import Toast from '../../shared/components/Toast';
 import { useAuth } from '../../shared/context/AuthContext';
@@ -12,7 +12,6 @@ const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const [activeTab, setActiveTab] = useState('RESIDENT'); 
   const [loading, setLoading] = useState(false);
-  
   const [showAddModal, setShowAddModal] = useState(false);
   const [formData, setFormData] = useState({
     userFirstName: '',
@@ -23,11 +22,7 @@ const UserManagement = () => {
     role: 'OFFICIAL'
   });
 
-  useEffect(() => {
-    fetchUsers(activeTab);
-  }, [activeTab]);
-
-  const fetchUsers = async (role) => {
+  const fetchUsers = useCallback(async (role) => {
     setLoading(true);
     try {
       const response = await fetch(`${API_BASE_URL}/api/admin/users?role=${role}`, {
@@ -37,7 +32,7 @@ const UserManagement = () => {
           const data = await response.json();
           const sortedData = data.sort((a, b) => a.userId - b.userId);
           setUsers(sortedData);
-      }else {
+      } else {
         setToast({ message: "Failed to load users", type: "error" });
       }
     } catch (error) {
@@ -45,7 +40,11 @@ const UserManagement = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [token]);
+
+  useEffect(() => {
+    fetchUsers(activeTab);
+  }, [activeTab, fetchUsers]);
 
   const handleDelete = async (userId, name) => {
     if (!window.confirm(`Are you sure you want to permanently delete ${name}'s account?`)) return;

@@ -43,8 +43,8 @@ const DocumentsPage = () => {
         });
         if (response.ok) {
           const data = await response.json();
-          const pending = data.filter(doc => !doc.status || doc.status.toUpperCase() === 'PENDING');
-          const history = data.filter(doc => doc.status && doc.status.toUpperCase() !== 'PENDING');
+          const pending = data.filter(doc => !doc.status || doc.status.toUpperCase().includes('PENDING'));
+          const history = data.filter(doc => doc.status && !doc.status.toUpperCase().includes('PENDING'));
           
           setPendingDocuments(pending);
           setHistoryDocuments(history);

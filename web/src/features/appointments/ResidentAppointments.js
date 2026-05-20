@@ -122,8 +122,6 @@ const AppointmentsPage = () => {
                     >
                       <option value="" disabled>Select a service</option>
                       <option value="Clinic Check-up">Clinic Check-up</option>
-                      <option value="Document Pick-up">Document Pick-up</option>
-                      <option value="Barangay Official Meeting">Barangay Hearing Attendance</option>
                       <option value="Counseling">Captain Counseling</option>
                     </select>
                   </div>

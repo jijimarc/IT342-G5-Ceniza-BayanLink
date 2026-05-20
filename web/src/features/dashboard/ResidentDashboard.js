@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Sidebar from '../../shared/components/Sidebar'; 
 import '../../shared/components/Layout.css'; 
 import './Dashboard.css';
-import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext'; 
 import Toast from '../../shared/components/Toast';
 import { DocumentIcon } from '../../shared/components/Icons';
 import { API_BASE_URL } from '../../shared/utils/config';
 
 const Dashboard = () => {
-  const navigate = useNavigate();
   const { user, token } = useAuth(); 
   const [toast, setToast] = useState({ message: '', type: '' }); 
   const displayName = user?.isGuest ? "Guest User" : (user?.fullname || "User");
