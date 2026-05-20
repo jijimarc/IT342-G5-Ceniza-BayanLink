@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext'; 
 import './AuthPage.css';
 import Toast from '../../shared/components/Toast';
+import BayanLinkLogo from './Logo.png';
 
 const EyeIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -41,11 +42,7 @@ const Login = () => {
           navigate('/dashboard');
         }, 1000);
     } else {
-<<<<<<< Updated upstream
-      setToast({ message: result.message || 'Login failed!', type: 'error' });
-=======
       setToast({ message: 'Login failed! Invalid Email or Password', type: 'error' });
->>>>>>> Stashed changes
     }
   };
 
@@ -61,8 +58,17 @@ const Login = () => {
   return (
     <div className="auth-page-wrapper">
       <div className="auth-hero-section">
-        <h1>Welcome</h1>
-        <p>Access your dashboard and manage your services efficiently.</p>
+        <img 
+          src={BayanLinkLogo} 
+          alt="BayanLink Logo" 
+          className="auth-logo" 
+        />
+        <h1>Welcome to BayanLink</h1>
+        <p style={{ lineHeight: '1.6', maxWidth: '80%' }}>
+          Your centralized community portal for seamless barangay transactions. 
+          Request documents, schedule appointments, and stay updated with the latest 
+          announcements directly from your local officials.
+        </p>
       </div>
 
       <div className="auth-form-section">
