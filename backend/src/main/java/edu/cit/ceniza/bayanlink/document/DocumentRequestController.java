@@ -16,7 +16,7 @@ import java.util.List;
 public class DocumentRequestController {
 
     private final DocumentRequestService documentRequestService;
-    DocumentGenerationService documentGenerateService = new DocumentGenerationService();
+    private final DocumentGenerationService documentGenerateService;
 
     @PostMapping("/request")
     public ResponseEntity<?> submitDocumentRequest(
