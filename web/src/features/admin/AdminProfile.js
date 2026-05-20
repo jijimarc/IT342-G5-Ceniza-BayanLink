@@ -4,6 +4,7 @@ import { useAuth } from '../../shared/context/AuthContext';
 import Toast from '../../shared/components/Toast'; 
 import '../../shared/components/Layout.css';
 import '../profile/Profile.css';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
@@ -24,7 +25,7 @@ const AdminProfile = () => {
 
   useEffect(() => {
     if (user && token) {
-      fetch(`http://localhost:8080/api/users/profile/${user.userId}`, {
+      fetch(`${API_BASE_URL}/api/users/profile/${user.userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
       .then(res => res.json())
@@ -57,7 +58,7 @@ const AdminProfile = () => {
 
   const handleSave = async () => {
     try {
-        const response = await fetch('http://localhost:8080/api/users/profile', {
+        const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

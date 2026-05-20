@@ -3,6 +3,7 @@ import { useAuth } from '../../shared/context/AuthContext';
 import OfficialDashboard from './OfficialDashboard';
 import ResidentDashboard from './ResidentDashboard';
 import { Navigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const DashboardController = () => {
   const { user } = useAuth();

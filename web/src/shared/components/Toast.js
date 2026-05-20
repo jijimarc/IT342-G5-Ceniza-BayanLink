@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import './Toast.css';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const Toast = ({ message, type = 'success', duration = 3000, onClose }) => {
   useEffect(() => {

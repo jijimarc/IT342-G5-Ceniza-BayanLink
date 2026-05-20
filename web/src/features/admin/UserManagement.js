@@ -4,6 +4,7 @@ import Toast from '../../shared/components/Toast';
 import { useAuth } from '../../shared/context/AuthContext';
 import '../../shared/components/Layout.css';
 import './UserManagement.css';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const UserManagement = () => {
   const { user, token } = useAuth();
@@ -29,7 +30,7 @@ const UserManagement = () => {
   const fetchUsers = async (role) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:8080/api/admin/users?role=${role}`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/users?role=${role}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -50,7 +51,7 @@ const UserManagement = () => {
     if (!window.confirm(`Are you sure you want to permanently delete ${name}'s account?`)) return;
 
     try {
-      const response = await fetch(`http://localhost:8080/api/admin/users/${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -72,7 +73,7 @@ const UserManagement = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:8080/api/admin/users?role=${formData.role}`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/users?role=${formData.role}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext';
 import Toast from '../../shared/components/Toast';
 import { DocumentIcon } from '../../shared/components/Icons'; 
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const DocumentsPage = () => {
   const navigate = useNavigate();
@@ -37,7 +38,7 @@ const DocumentsPage = () => {
     const fetchDocuments = async () => {
       if (!user || user.isGuest || !token) return;
       try {
-        const response = await fetch(`http://localhost:8080/api/documents/user/${user.userId}`, {
+        const response = await fetch(`${API_BASE_URL}/api/documents/user/${user.userId}`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -101,7 +102,7 @@ const DocumentsPage = () => {
     submissionData.append('idImage', idImage); 
 
     try {
-      const response = await fetch('http://localhost:8080/api/documents/request', {
+      const response = await fetch(`${API_BASE_URL}/api/documents/request`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -129,7 +130,7 @@ const DocumentsPage = () => {
 
   return (
     <div className="dashboard-wrapper">
-
+      <Sidebar />
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-title">

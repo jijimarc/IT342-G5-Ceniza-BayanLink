@@ -4,6 +4,7 @@ import '../../shared/components/Layout.css';
 import '../dashboard/Dashboard.css'; 
 import { useAuth } from '../../shared/context/AuthContext';
 import Toast from '../../shared/components/Toast';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const AdminDashboard = () => {
   const { user, token } = useAuth();
@@ -18,7 +19,7 @@ const AdminDashboard = () => {
   const [newAnnouncementContent, setNewAnnouncementContent] = useState('');
 
   const fetchAnnouncements = useCallback(() => {
-    fetch('http://localhost:8080/api/announcements', {
+    fetch(`${API_BASE_URL}/api/announcements`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -32,10 +33,10 @@ const AdminDashboard = () => {
 
     const fetchStats = async () => {
       try {
-        const resResident = await fetch('http://localhost:8080/api/admin/users?role=RESIDENT', {
+        const resResident = await fetch(`${API_BASE_URL}/api/admin/users?role=RESIDENT`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        const resOfficial = await fetch('http://localhost:8080/api/admin/users?role=OFFICIAL', {
+        const resOfficial = await fetch(`${API_BASE_URL}/api/admin/users?role=OFFICIAL`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         
@@ -55,7 +56,7 @@ const AdminDashboard = () => {
     if (!newAnnouncementTitle.trim() || !newAnnouncementContent.trim()) return;
 
     try {
-      const response = await fetch('http://localhost:8080/api/announcements', {
+      const response = await fetch(`${API_BASE_URL}/api/announcements`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

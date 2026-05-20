@@ -5,6 +5,7 @@ import './Documents.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext';
 import Toast from '../../shared/components/Toast';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const OfficialDocuments = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const OfficialDocuments = () => {
   
   const fetchAllDocuments = useCallback(() => {
     if (!token) return;
-    fetch('http://localhost:8080/api/documents/all', {
+    fetch(`${API_BASE_URL}/api/documents/all`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -40,7 +41,7 @@ const OfficialDocuments = () => {
 
   const handleUpdateStatus = async (id, newStatus) => {
     try {
-      const response = await fetch(`http://localhost:8080/api/documents/${id}/status?officialId=${user.userId}&status=${newStatus}`, {
+      const response = await fetch(`${API_BASE_URL}/api/documents/${id}/status?officialId=${user.userId}&status=${newStatus}`, {
         method: 'PUT',
         headers: { 
           'Authorization': `Bearer ${token}`,

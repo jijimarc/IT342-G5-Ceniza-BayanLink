@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import './Sidebar.css';
 import { useAuth } from '../context/AuthContext'; 
 import Toast from './Toast';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const Sidebar = ({ onLogout }) => {
   const { user, logout } = useAuth();

@@ -4,6 +4,7 @@ import { useAuth } from '../../shared/context/AuthContext';
 import './AuthPage.css';
 import Toast from '../../shared/components/Toast';
 import BayanLinkLogo from './Logo.png';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const EyeIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

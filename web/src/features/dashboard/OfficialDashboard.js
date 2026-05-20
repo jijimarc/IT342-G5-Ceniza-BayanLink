@@ -5,6 +5,7 @@ import './Dashboard.css';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext';
 import Toast from '../../shared/components/Toast';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const OfficialDashboard = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const OfficialDashboard = () => {
   const [newAnnouncementContent, setNewAnnouncementContent] = useState('');
 
   const fetchAnnouncements = useCallback(() => {
-    fetch('http://localhost:8080/api/announcements', {
+    fetch(`${API_BASE_URL}/api/announcements`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => {
@@ -35,7 +36,7 @@ const OfficialDashboard = () => {
   useEffect(() => {
     if (!token) return;
     fetchAnnouncements();
-    fetch('http://localhost:8080/api/officials/directory', {
+    fetch(`${API_BASE_URL}/api/officials/directory`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => {
@@ -50,14 +51,14 @@ const OfficialDashboard = () => {
       })
       .catch(err => console.error("Error fetching staff:", err));
 
-    fetch('http://localhost:8080/api/clinic-services', {
+    fetch(`${API_BASE_URL}/api/clinic-services`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())
       .then(data => setServices(data))
       .catch(err => console.error("Error fetching services:", err));
 
-    fetch('http://localhost:8080/api/documents/pending', {
+    fetch(`${API_BASE_URL}/api/documents/pending`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => {
@@ -73,7 +74,7 @@ const OfficialDashboard = () => {
       .catch(err => console.error("Error fetching docs count:", err));
 
     const today = new Date().toISOString().split('T')[0];
-    fetch(`http://localhost:8080/api/appointments/schedule?date=${today}`, {
+    fetch(`${API_BASE_URL}/api/appointments/schedule?date=${today}`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => {
@@ -90,7 +91,7 @@ const OfficialDashboard = () => {
     if (!newAnnouncementTitle.trim() || !newAnnouncementContent.trim()) return;
 
     try {
-      const response = await fetch('http://localhost:8080/api/announcements', {
+      const response = await fetch(`${API_BASE_URL}/api/announcements`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

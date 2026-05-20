@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext } from 'react';
-
+import { API_BASE_URL } from '../../shared/utils/config';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:8080/api/users/login', {
+      const response = await fetch(`${API_BASE_URL}/api/users/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -5,6 +5,7 @@ import Toast from '../../shared/components/Toast';
 import '../../shared/components/Layout.css';
 import './Profile.css';
 const DEFAULT_AVATAR = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const Profile = () => {
   const { user, token, updateUser } = useAuth(); 
@@ -51,7 +52,7 @@ const Profile = () => {
 
       if (user && !user.isGuest && token) {
         try {
-          const response = await fetch(`http://localhost:8080/api/users/profile/${user.userId}`, {
+          const response = await fetch(`${API_BASE_URL}/api/users/profile/${user.userId}`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }
@@ -129,7 +130,7 @@ const Profile = () => {
 
   const handleSave = async () => {
     try {
-        const response = await fetch('http://localhost:8080/api/users/profile', {
+        const response = await fetch(`${API_BASE_URL}/api/users/profile`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

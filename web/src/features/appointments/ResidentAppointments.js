@@ -5,6 +5,7 @@ import '../../shared/components/Layout.css';
 import './Appointments.css'; 
 import { useNavigate } from 'react-router-dom';
 import Toast from '../../shared/components/Toast';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const AppointmentsPage = () => {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ const AppointmentsPage = () => {
     };
 
     try {
-      const response = await fetch('http://localhost:8080/api/appointments/book', {
+      const response = await fetch(`${API_BASE_URL}/api/appointments/book`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

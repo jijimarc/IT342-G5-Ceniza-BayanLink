@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext';
 import Toast from '../../shared/components/Toast';
 import { StaffIcon } from '../../shared/components/Icons';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const OfficialClinic = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const OfficialClinic = () => {
   useEffect(() => {
     const fetchHealthStaff = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/officials/directory', {
+        const response = await fetch(`${API_BASE_URL}/api/officials/directory`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -52,7 +53,7 @@ const OfficialClinic = () => {
 
     const fetchServices = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/clinic-services', {
+        const response = await fetch(`${API_BASE_URL}/api/clinic-services`, {
            headers: { 'Authorization': `Bearer ${token}` } 
         });
         if (response.ok) {
@@ -77,7 +78,7 @@ const OfficialClinic = () => {
     ));
 
     try {
-      const response = await fetch(`http://localhost:8080/api/officials/${id}/presence?isPresent=${newStatus}`, {
+      const response = await fetch(`${API_BASE_URL}/api/officials/${id}/presence?isPresent=${newStatus}`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -103,7 +104,7 @@ const OfficialClinic = () => {
     ));
 
     try {
-      const response = await fetch(`http://localhost:8080/api/clinic-services/${id}/toggle?isAvailable=${newStatus}`, {
+      const response = await fetch(`${API_BASE_URL}/api/clinic-services/${id}/toggle?isAvailable=${newStatus}`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -125,7 +126,7 @@ const OfficialClinic = () => {
     if (!newService.trim()) return;
 
     try {
-      const response = await fetch('http://localhost:8080/api/clinic-services', {
+      const response = await fetch(`${API_BASE_URL}/api/clinic-services`, {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext'; 
 import Toast from '../../shared/components/Toast';
 import { DocumentIcon } from '../../shared/components/Icons';
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (!token || user?.isGuest) return;
 
-    fetch('http://localhost:8080/api/announcements', {
+    fetch(`${API_BASE_URL}/api/announcements`, {
       headers: { 'Authorization': `Bearer ${token}` } 
     })
       .then(res => {
@@ -33,7 +34,7 @@ const Dashboard = () => {
       .then(data => setAnnouncements(data))
       .catch(err => console.error("Error fetching announcements:", err));
 
-    fetch('http://localhost:8080/api/officials/directory', {
+    fetch(`${API_BASE_URL}/api/officials/directory`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => {
@@ -48,7 +49,7 @@ const Dashboard = () => {
       })
       .catch(err => console.error("Error fetching staff:", err));
 
-    fetch('http://localhost:8080/api/clinic-services', {
+    fetch(`${API_BASE_URL}/api/clinic-services`, {
       headers: { 'Authorization': `Bearer ${token}` }
     })
       .then(res => res.json())
@@ -56,7 +57,7 @@ const Dashboard = () => {
       .catch(err => console.error("Error fetching services:", err));
 
     if (user && user.userId) {
-      fetch(`http://localhost:8080/api/documents/user/${user.userId}`, {
+      fetch(`${API_BASE_URL}/api/documents/user/${user.userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
         .then(res => {
@@ -71,7 +72,7 @@ const Dashboard = () => {
         })
         .catch(err => console.error("Error fetching documents:", err));
 
-      fetch(`http://localhost:8080/api/appointments/user/${user.userId}`, {
+      fetch(`${API_BASE_URL}/api/appointments/user/${user.userId}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       })
         .then(res => {

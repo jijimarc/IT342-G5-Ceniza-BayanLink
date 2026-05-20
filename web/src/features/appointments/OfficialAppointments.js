@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../shared/context/AuthContext';
 import Toast from '../../shared/components/Toast';
 import { StaffIcon } from '../../shared/components/Icons'; 
+import { API_BASE_URL } from '../../shared/utils/config';
 
 const OfficialAppointments = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const OfficialAppointments = () => {
   const fetchSchedule = useCallback(async () => {
     if (!token) return;
     try {
-      const response = await fetch(`http://localhost:8080/api/appointments/schedule?date=${selectedDate}`, {
+      const response = await fetch(`${API_BASE_URL}/api/appointments/schedule?date=${selectedDate}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       
@@ -40,7 +41,7 @@ const OfficialAppointments = () => {
   const fetchAdminStaff = useCallback(async () => {
     if (!token) return;
     try {
-      const response = await fetch('http://localhost:8080/api/officials/directory', {
+      const response = await fetch(`${API_BASE_URL}/api/officials/directory`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
@@ -79,7 +80,7 @@ const OfficialAppointments = () => {
     if (newStatus === 'PENDING') return; 
 
     try {
-      const response = await fetch(`http://localhost:8080/api/appointments/${appointmentId}/status?officialId=${user.userId}&status=${newStatus}`, {
+      const response = await fetch(`${API_BASE_URL}/api/appointments/${appointmentId}/status?officialId=${user.userId}&status=${newStatus}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -107,7 +108,7 @@ const OfficialAppointments = () => {
     ));
 
     try {
-      const response = await fetch(`http://localhost:8080/api/officials/${id}/presence?isPresent=${newStatus}`, {
+      const response = await fetch(`${API_BASE_URL}/api/officials/${id}/presence?isPresent=${newStatus}`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` }
       });
