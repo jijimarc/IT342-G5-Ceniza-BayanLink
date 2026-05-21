@@ -22,16 +22,12 @@ public class UserFactory {
         newUser.setUserFirstname(data.getUserFirstName());
         newUser.setUserLastname(data.getUserLastName());
         newUser.setUserPassword(passwordEncoder.encode(data.getUserPassword()));
-
-        // Factory decision logic
         if ("OFFICIAL".equalsIgnoreCase(requestedRole)) {
             newUser.setUserRole(Role.OFFICIAL);
             Official newOfficial = new Official();
             newOfficial.setUser(newUser);
-            // Assuming your User entity has a setOfficialProfile method
-            // newUser.setOfficialProfile(newOfficial);
+            newUser.setOfficialProfile(newOfficial);
         } else {
-            // Default to Resident
             newUser.setUserRole(Role.RESIDENT);
             Resident newResident = new Resident();
             newResident.setUser(newUser);

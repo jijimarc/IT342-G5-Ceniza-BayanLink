@@ -29,4 +29,12 @@ public class ClinicServiceController {
         service.setAvailable(isAvailable);
         return ResponseEntity.ok(repository.save(service));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteService(@PathVariable Integer id) {
+        ClinicService service = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Service not found with ID: " + id));
+        repository.delete(service);
+        return ResponseEntity.noContent().build();
+    }
 }

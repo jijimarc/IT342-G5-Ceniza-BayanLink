@@ -1,7 +1,9 @@
 package edu.cit.ceniza.bayanlink.user.profile;
 
+import edu.cit.ceniza.bayanlink.user.Role;
 import edu.cit.ceniza.bayanlink.user.User;
 import edu.cit.ceniza.bayanlink.user.UserRepository;
+import edu.cit.ceniza.bayanlink.user.official.Official;
 import edu.cit.ceniza.bayanlink.user.resident.Resident;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,17 @@ public class ProfileService {
             dto.setVoterStatus(resident.getVoterStatus());
             dto.setOccupation(resident.getOccupation());
         }
+        else if (user.getOfficialProfile() != null) {
+            Official official = user.getOfficialProfile();
+            dto.setAddress(official.getAddress());
+            dto.setContactNumber(official.getContactNumber());
+            dto.setCivilStatus(official.getCivilStatus());
+            dto.setVoterStatus(official.getVoterStatus());
+            dto.setOccupation(official.getOccupation());
+            dto.setPositionTitle(official.getPosition());
+            dto.setTermStart(official.getTermStart());
+            dto.setTermEnd(official.getTermEnd());
+        }
 
         return dto;
     }
@@ -46,19 +59,33 @@ public class ProfileService {
         existingUser.setUserMiddlename(data.getUserMiddlename());
         existingUser.setUserBirthdate(data.getUserBirthdate());
         existingUser.setUserProfileImage(data.getUserProfileImage());
-
-        Resident resident = existingUser.getResidentProfile();
-        if (resident == null) {
-            resident = new Resident();
-            resident.setUser(existingUser);
-            resident.setUserId(existingUser.getUserId());
-            existingUser.setResidentProfile(resident);
+        if (existingUser.getUserRole() == Role.OFFICIAL) {
+            Official official = existingUser.getOfficialProfile();
+            if (official == null) {
+                official = new Official();
+                official.setUser(existingUser);
+                existingUser.setOfficialProfile(official);
+            }
+            official.setAddress(data.getAddress());
+            official.setContactNumber(data.getContactNumber());
+            official.setCivilStatus(data.getCivilStatus());
+            official.setVoterStatus(data.getVoterStatus());
+            official.setOccupation(data.getOccupation());
         }
-        resident.setAddress(data.getAddress());
-        resident.setContactNumber(data.getContactNumber());
-        resident.setCivilStatus(data.getCivilStatus());
-        resident.setVoterStatus(data.getVoterStatus());
-        resident.setOccupation(data.getOccupation());
+        else {
+            Resident resident = existingUser.getResidentProfile();
+            if (resident == null) {
+                resident = new Resident();
+                resident.setUser(existingUser);
+                resident.setUserId(existingUser.getUserId());
+                existingUser.setResidentProfile(resident);
+            }
+            resident.setAddress(data.getAddress());
+            resident.setContactNumber(data.getContactNumber());
+            resident.setCivilStatus(data.getCivilStatus());
+            resident.setVoterStatus(data.getVoterStatus());
+            resident.setOccupation(data.getOccupation());
+        }
 
         return userRepository.save(existingUser);
     }

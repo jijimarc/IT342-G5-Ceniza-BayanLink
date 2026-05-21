@@ -19,4 +19,7 @@ public class ProfileDTO {
     private String civilStatus;
     private String voterStatus;
     private String occupation;
+    private String positionTitle;
+    private LocalDate termStart;
+    private LocalDate termEnd;
 }

@@ -3,6 +3,7 @@ package edu.cit.ceniza.bayanlink.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private final JavaMailSender mailSender;
-
+    @Async
     public void sendAppointmentApprovalEmail(String recipientEmail, String residentName, String serviceType, String date, String time) {
         SimpleMailMessage message = new SimpleMailMessage();
 
@@ -32,7 +33,7 @@ public class EmailService {
 
         mailSender.send(message);
     }
-
+    @Async
     public void sendAppointmentRejectEmail(String recipientEmail, String residentName, String serviceType, String date) {
         SimpleMailMessage message = new SimpleMailMessage();
 
@@ -53,7 +54,7 @@ public class EmailService {
 
         mailSender.send(message);
     }
-
+    @Async
     public void sendDocumentReadyEmail(String recipientEmail, String residentName, String documentType, Long requestId) {
         SimpleMailMessage message = new SimpleMailMessage();
 
@@ -74,7 +75,7 @@ public class EmailService {
 
         mailSender.send(message);
     }
-
+    @Async
     public void sendDocumentRejectEmail(String recipientEmail, String residentName, String documentType, Long requestId) {
         SimpleMailMessage message = new SimpleMailMessage();
 

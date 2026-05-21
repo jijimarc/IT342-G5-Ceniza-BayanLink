@@ -28,15 +28,25 @@ public class DataSeeder implements CommandLineRunner {
         // Admin Account
         seedAdmin("admin@gmail.com", "System", "Administrator");
 
-        // Core Administrative Officials
-        seedOfficial("captain@gmail.com", "Jian Marc", "Ceniza", "Barangay Captain", "Executive");
-        seedOfficial("secretary@gmail.com", "Maribeth", "Ceniza", "Barangay Secretary", "Administration");
-        seedOfficial("receptionist@gmail.com", "Alex", "Ceniza", "Front Desk Receptionist", "Administration");
+        // Core Administrative Officials (Updated with comprehensive demographic seed data)
+        seedOfficial("captain@gmail.com", "Jian Marc", "Ceniza", "Barangay Captain", "Executive",
+                "123 Barangay Hall St., Dalaguete, Cebu", "09123456789", "Single", "Registered", "Public Servant");
+
+        seedOfficial("secretary@gmail.com", "Maribeth", "Ceniza", "Barangay Secretary", "Administration",
+                "456 Coconut Drive, Dalaguete, Cebu", "09234567890", "Married", "Registered", "Administrator");
+
+        seedOfficial("receptionist@gmail.com", "Alex", "Ceniza", "Front Desk Receptionist", "Administration",
+                "789 Mango Lane, Dalaguete, Cebu", "09345678901", "Single", "Registered", "Clerk");
 
         // Health Clinic Staff
-        seedOfficial("drreyes@gmail.com", "Ricardo", "Reyes", "Head Physician", "Health");
-        seedOfficial("nursesantos@gmail.com", "Elena", "Santos", "Registered Nurse", "Health");
-        seedOfficial("drlim@gmail.com", "Jonathan", "Lim", "Pediatrician", "Health");
+        seedOfficial("drreyes@gmail.com", "Ricardo", "Reyes", "Head Physician", "Health",
+                "101 Medical Plaza, Dalaguete, Cebu", "09456789012", "Married", "Registered", "Doctor");
+
+        seedOfficial("nursesantos@gmail.com", "Elena", "Santos", "Registered Nurse", "Health",
+                "202 Care Ave, Dalaguete, Cebu", "09567890123", "Single", "Registered", "Nurse");
+
+        seedOfficial("drlim@gmail.com", "Jonathan", "Lim", "Pediatrician", "Health",
+                "303 Childrens Lane, Dalaguete, Cebu", "09678901234", "Married", "Registered", "Pediatrician");
 
         // Seed Common Barangay Services
         seedServices();
@@ -76,7 +86,8 @@ public class DataSeeder implements CommandLineRunner {
         }
     }
 
-    private void seedOfficial(String email, String firstName, String lastName, String position, String committee) {
+    private void seedOfficial(String email, String firstName, String lastName, String position, String committee,
+                              String address, String contactNumber, String civilStatus, String voterStatus, String occupation) {
         if (!userRepository.existsByUserEmail(email)) {
             User user = new User();
             user.setUserEmail(email);
@@ -90,6 +101,12 @@ public class DataSeeder implements CommandLineRunner {
             official.setCommittee(committee);
             official.setTermStart(LocalDate.of(2026, 1, 1));
             official.setTermEnd(LocalDate.of(2030, 1, 31));
+            official.setAddress(address);
+            official.setContactNumber(contactNumber);
+            official.setCivilStatus(civilStatus);
+            official.setVoterStatus(voterStatus);
+            official.setOccupation(occupation);
+
             official.setUser(user);
             user.setOfficialProfile(official);
 

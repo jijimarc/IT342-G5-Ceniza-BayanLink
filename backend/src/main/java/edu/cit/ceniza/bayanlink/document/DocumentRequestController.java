@@ -1,12 +1,16 @@
 package edu.cit.ceniza.bayanlink.document;
 
+import edu.cit.ceniza.bayanlink.user.Role;
+import edu.cit.ceniza.bayanlink.user.User;
+import edu.cit.ceniza.bayanlink.user.UserRepository;
 import edu.cit.ceniza.bayanlink.user.official.Official;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @RestController
@@ -16,8 +20,8 @@ import java.util.List;
 public class DocumentRequestController {
 
     private final DocumentRequestService documentRequestService;
-    private final DocumentGenerationService documentGenerateService;
-
+    private final DocumentGenerationService documentGenerationService;
+    private final UserRepository userRepository;
     @PostMapping("/request")
     public ResponseEntity<?> submitDocumentRequest(
             @RequestParam("userId") Integer userId,
@@ -73,18 +77,27 @@ public class DocumentRequestController {
         return ResponseEntity.ok(allDocs);
     }
 
-    @PostMapping("/{requestId}/process")
+    @PostMapping("/{id}/process")
     public ResponseEntity<String> processDocument(
-            @PathVariable Long requestId,
-            @AuthenticationPrincipal Official processingOfficial) {
-
-        try {
-            String readyToPrintHtml = documentGenerateService.processAndGenerateDocument(requestId, processingOfficial);
-
-            return ResponseEntity.ok(readyToPrintHtml);
-
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error processing document: " + e.getMessage());
+            @PathVariable Long id,
+            Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(401).body("Unauthorized: Missing user authentication session.");
         }
+
+        String activeUserEmail = authentication.getName();
+
+        User currentUser = userRepository.findByUserEmail(activeUserEmail)
+                .orElseThrow(() -> new RuntimeException("Authenticated administrative account missing from records."));
+
+        Official processingOfficial = currentUser.getOfficialProfile();
+        if (processingOfficial == null) {
+            return ResponseEntity.status(403).body("Forbidden: Logged-in user is not an authorized Official profile.");
+        }
+
+        String htmlContent = documentGenerationService.processAndGenerateDocument(id, processingOfficial);
+        return ResponseEntity.ok()
+                .header("Content-Type", "text/html; charset=UTF-8")
+                .body(htmlContent);
     }
 }
