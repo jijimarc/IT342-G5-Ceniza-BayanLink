@@ -18,16 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Loading User..."
+        android:text="Resident"
         android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/tvHeaderEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="loading@gmail.com"
-        android:textColor="#94A3B8"
-        android:textSize="14sp" />
 </LinearLayout>

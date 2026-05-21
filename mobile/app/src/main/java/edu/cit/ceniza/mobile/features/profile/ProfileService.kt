@@ -9,16 +9,15 @@ import retrofit2.http.Path
 
 interface ProfileService {
 
-    @GET("api/resident/{userId}/profile")
+    @GET("api/users/profile/{id}")
     fun getResidentProfile(
-        @Path("userId") userId: Long,
+        @Path("id") userId: Int,
         @Header("Authorization") token: String
     ): Call<ResidentProfile>
 
-    @PUT("api/resident/{userId}/profile")
+    @PUT("api/users/profile")
     fun updateResidentProfile(
-        @Path("userId") userId: Long,
         @Header("Authorization") token: String,
         @Body updatedProfile: ResidentProfile
-    ): Call<ProfileUpdateResponse>
+    ): Call<Void>
 }

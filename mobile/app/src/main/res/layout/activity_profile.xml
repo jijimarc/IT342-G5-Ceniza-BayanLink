@@ -63,8 +63,8 @@
                     android:enabled="false"
                     android:paddingHorizontal="16dp"
                     android:hint="Juan"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#475569"/>
+                    android:textColor="#000000"
+                    android:textColorHint="#EEEEEE"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -81,8 +81,8 @@
                     android:enabled="false"
                     android:paddingHorizontal="16dp"
                     android:hint="Lee"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#475569"/>
+                    android:textColor="#000000"
+                    android:textColorHint="#EEEEEE"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -99,14 +99,14 @@
                     android:enabled="false"
                     android:paddingHorizontal="16dp"
                     android:hint="Dela Cruz"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#475569"/>
+                    android:textColor="#000000"
+                    android:textColorHint="#EEEEEE"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Email Address"
-                    android:textColor="#94A3B8" />
+                    android:textColor="#EEEEEE" />
 
                 <EditText
                     android:id="@+id/etEmail"
@@ -117,14 +117,14 @@
                     android:enabled="false"
                     android:paddingHorizontal="16dp"
                     android:hint="juandelacruz@gmail.com"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#475569"/>
+                    android:textColor="#000000"
+                    android:textColorHint="#EEEEEE"/>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Contact Number"
-                    android:textColor="#94A3B8" />
+                    android:textColor="#EEEEEE" />
 
                 <EditText
                     android:id="@+id/etContact"
@@ -135,8 +135,8 @@
                     android:enabled="false"
                     android:hint="e.g., 09123456789"
                     android:paddingHorizontal="16dp"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#475569" />
+                    android:textColor="#000000"
+                    android:textColorHint="#EEEEEE" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -166,8 +166,8 @@
                             android:enabled="false"
                             android:paddingHorizontal="16dp"
                             android:hint="01/03/2000"
-                            android:textColor="#FFFFFF"
-                            android:textColorHint="#475569" />
+                            android:textColor="#000000"
+                            android:textColorHint="#EEEEEE" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -191,8 +191,8 @@
                             android:enabled="false"
                             android:paddingHorizontal="16dp"
                             android:hint="26"
-                            android:textColor="#FFFFFF"
-                            android:textColorHint="#475569"/>
+                            android:textColor="#000000"
+                            android:textColorHint="#EEEEEE"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -221,8 +221,8 @@
                     android:enabled="false"
                     android:paddingHorizontal="16dp"
                     android:hint="Casay, Dalaguete, Cebu"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#475569"/>
+                    android:textColor="#000000"
+                    android:textColorHint="#EEEEEE"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -239,8 +239,8 @@
                     android:enabled="false"
                     android:hint="Single"
                     android:paddingHorizontal="16dp"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#475569" />
+                    android:textColor="#000000"
+                    android:textColorHint="#EEEEEE" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -257,8 +257,8 @@
                     android:enabled="false"
                     android:paddingHorizontal="16dp"
                     android:hint="Vendor"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#475569"/>
+                    android:textColor="#000000"
+                    android:textColorHint="#EEEEEE"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -275,8 +275,8 @@
                     android:enabled="false"
                     android:paddingHorizontal="16dp"
                     android:hint="Registered"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#475569" />
+                    android:textColor="#000000"
+                    android:textColorHint="#EEEEEE" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -292,7 +292,7 @@
                         android:layout_weight="1"
                         android:backgroundTint="#334155"
                         android:text="Cancel"
-                        android:textColor="#94A3B8"
+                        android:textColor="#000000"
                         android:textStyle="bold"
                         android:visibility="gone" />
 
@@ -318,8 +318,8 @@
         android:layout_gravity="start"
         android:background="#1E293B"
         app:headerLayout="@layout/nav_header"
-        app:itemIconTint="#94A3B8"
-        app:itemTextColor="#E2E8F0"
+        app:itemTextColor="@color/menu_color"
+        app:itemIconTint="@color/menu_color"
         app:menu="@menu/drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

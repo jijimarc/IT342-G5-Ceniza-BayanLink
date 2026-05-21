@@ -7,10 +7,24 @@ import retrofit2.http.Path
 
 interface DashboardService {
 
-    @GET("api/resident/{userId}/dashboard")
-    fun getResidentDashboard(
-        @Path("userId") userId: Long,
-        @Header("Authorization") bearerToken: String
-    ): Call<DashboardSummaryResponse>
+    @GET("api/announcements")
+    fun getAnnouncements(@Header("Authorization") token: String): Call<List<Announcement>>
 
+    @GET("api/officials/directory")
+    fun getOfficials(@Header("Authorization") token: String): Call<List<Staff>>
+
+    @GET("api/documents/user/{userId}")
+    fun getResidentDocuments(
+        @Path("userId") userId: Long,
+        @Header("Authorization") token: String
+    ): Call<List<DocumentRequest>>
+
+    @GET("api/appointments/user/{userId}")
+    fun getResidentAppointments(
+        @Path("userId") userId: Long,
+        @Header("Authorization") token: String
+    ): Call<List<Appointment>>
+
+    @GET("api/clinic-services")
+    fun getClinicServices(@Header("Authorization") token: String): Call<List<BarangayService>>
 }

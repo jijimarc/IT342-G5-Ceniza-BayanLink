@@ -70,8 +70,8 @@
                             android:enabled="false"
                             android:paddingHorizontal="16dp"
                             android:hint="Juan Dela Cruz"
-                            android:textColor="#FFFFFF"
-                            android:textColorHint="#475569"/>
+                            android:textColor="#000000"
+                            android:textColorHint="#EEEEEE"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -86,6 +86,7 @@
                             android:layout_marginBottom="16dp"
                             android:background="@drawable/input_style"
                             android:paddingHorizontal="12dp"
+                            android:textColor="#000000"
                             android:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
                             android:entries="@array/document_types" />
 
@@ -102,6 +103,7 @@
                             android:layout_marginBottom="16dp"
                             android:background="@drawable/input_style"
                             android:paddingHorizontal="12dp"
+                            android:textColor="#000000"
                             android:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
                             android:entries="@array/urgency_levels" />
 
@@ -118,6 +120,7 @@
                             android:layout_marginBottom="16dp"
                             android:background="@drawable/input_style"
                             android:paddingHorizontal="12dp"
+                            android:textColor="#000000"
                             android:popupTheme="@style/ThemeOverlay.AppCompat.Dark"
                             android:entries="@array/valid_ids" />
 
@@ -154,7 +157,7 @@
                                 android:layout_marginStart="12dp"
                                 android:layout_weight="1"
                                 android:text="No file chosen"
-                                android:textColor="#94A3B8"
+                                android:textColor="#000000"
                                 android:textSize="14sp" />
                         </LinearLayout>
 
@@ -174,8 +177,8 @@
                             android:hint="State the purpose of your request..."
                             android:inputType="textMultiLine"
                             android:padding="16dp"
-                            android:textColor="#FFFFFF"
-                            android:textColorHint="#475569" />
+                            android:textColor="#000000"
+                            android:textColorHint="#EEEEEE" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -230,14 +233,11 @@
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvPendingDocuments"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:gravity="center"
-                            android:text="No pending documents found."
-                            android:textColor="#64748B"
-                            android:textSize="14sp" />
+                            tools:listitem="@layout/item_document" />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -265,14 +265,11 @@
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
-                        <TextView
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvHistoryDocuments"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
-                            android:gravity="center"
-                            android:text="No pending documents found."
-                            android:textColor="#64748B"
-                            android:textSize="14sp" />
+                            tools:listitem="@layout/item_document" />
 
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
@@ -288,8 +285,8 @@
         android:layout_gravity="start"
         android:background="#1E293B"
         app:headerLayout="@layout/nav_header"
-        app:itemIconTint="#94A3B8"
-        app:itemTextColor="#E2E8F0"
+        app:itemTextColor="@color/menu_color"
+        app:itemIconTint="@color/menu_color"
         app:menu="@menu/drawer_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

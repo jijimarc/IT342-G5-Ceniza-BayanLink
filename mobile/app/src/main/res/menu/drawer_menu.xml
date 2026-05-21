@@ -11,21 +11,21 @@
             android:title="Appointments" />
         <item
             android:id="@+id/nav_documents"
-            android:title="Documents" />
+            android:title="Documents"/>
     </group>
 
     <item android:title="Account Settings">
         <menu>
             <item
                 android:id="@+id/nav_profile"
-                android:title="My Profile" />
+                android:title="My Profile"/>
+            <item
+                android:id="@+id/nav_notifications"
+                android:icon="@drawable/bell" android:title="Notifications"
+                app:showAsAction="always" />
             <item
                 android:id="@+id/nav_logout"
                 android:title="Logout" />
-            <item
-                android:id="@+id/action_notifications"
-                android:icon="@drawable/bell" android:title="Notifications"
-                app:showAsAction="always" />
         </menu>
     </item>
 

@@ -8,8 +8,13 @@ data class LoginRequest(
 data class LoginResponse(
     val token: String?,
     val userId: Long?,
-    val fullname: String?
-)
+    val fullname: String?,
+    val userEmail: String?,
+    val userFirstname: String?,
+    val userLastname: String?
+) {
+
+}
 
 data class RegisterRequest(
     val userEmail: String,

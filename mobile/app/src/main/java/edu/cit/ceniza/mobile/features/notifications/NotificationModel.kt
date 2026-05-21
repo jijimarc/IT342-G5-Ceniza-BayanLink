@@ -20,7 +20,6 @@ data class NotificationDocResponse(
 )
 
 data class NotificationApptResponse(
-    val id: Long?,
     val appointmentId: Long?,
     val status: String?,
     val appointmentDate: String?

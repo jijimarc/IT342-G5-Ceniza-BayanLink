@@ -14,8 +14,8 @@ data class DocumentResponse(
 )
 
 data class PendingDocument(
-    val id: Long,
+    val requestId: Long,
     val documentType: String,
     val status: String,
-    val requestDate: String
+    val requestDate: String?
 )

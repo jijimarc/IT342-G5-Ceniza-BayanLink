@@ -26,12 +26,7 @@ class RegisterActivity : AppCompatActivity() {
         val etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
         val btnSubmitRegister = findViewById<Button>(R.id.btnSubmitRegister)
         val tvBackToLogin = findViewById<TextView>(R.id.tvBackToLogin)
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-        val apiService = retrofit.create(AuthService::class.java)
+        val authService = edu.cit.ceniza.mobile.network.ApiClient.instance.create(AuthService::class.java)
 
         btnSubmitRegister.setOnClickListener {
             val fName = etFirstName.text.toString().trim()
@@ -66,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
             btnSubmitRegister.isEnabled = false
             btnSubmitRegister.text = "Registering..."
 
-            apiService.registerUser(requestPayload).enqueue(object : Callback<RegisterResponse> {
+            authService.registerUser(requestPayload).enqueue(object : Callback<RegisterResponse> {
                 override fun onResponse(call: Call<RegisterResponse>, response: Response<RegisterResponse>) {
                     btnSubmitRegister.isEnabled = true
                     btnSubmitRegister.text = "Create Account"

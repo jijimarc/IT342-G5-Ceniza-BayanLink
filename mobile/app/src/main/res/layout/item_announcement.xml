@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp"
+    android:layout_marginBottom="8dp"
+    android:background="#2D3748">
+
+    <TextView
+        android:id="@+id/tvAnnouncementTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sample Announcement Title"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvAnnouncementMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="This is the full content of the announcement..."
+        android:textColor="#E2E8F0"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvAnnouncementDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="May 21, 2026"
+        android:textColor="#A0AEC0"
+        android:textSize="12sp" />
+</LinearLayout>

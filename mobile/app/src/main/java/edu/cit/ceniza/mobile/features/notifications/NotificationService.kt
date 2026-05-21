@@ -10,12 +10,12 @@ interface NotificationService {
     @GET("api/documents/user/{userId}")
     suspend fun getUserDocuments(
         @Header("Authorization") token: String,
-        @Path("userId") userId: Int
+        @Path("userId") userId: Long
     ): Response<List<NotificationDocResponse>>
 
     @GET("api/appointments/user/{userId}")
     suspend fun getUserAppointments(
         @Header("Authorization") token: String,
-        @Path("userId") userId: Int
+        @Path("userId") userId: Long
     ): Response<List<NotificationApptResponse>>
 }

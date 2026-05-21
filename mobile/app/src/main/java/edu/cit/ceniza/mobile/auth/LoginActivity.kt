@@ -16,21 +16,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class LoginActivity : AppCompatActivity() {
+    private lateinit var sessionManager: SessionManager
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        sessionManager = SessionManager(this)
         val etEmail = findViewById<EditText>(R.id.etEmail)
         val etPassword = findViewById<EditText>(R.id.etPassword)
         val btnSubmitSignIn = findViewById<Button>(R.id.btnSubmitSignIn)
         val tvRegisterFooterLink = findViewById<TextView>(R.id.tvRegisterFooterLink)
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://10.0.2.2:8080/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val authService = retrofit.create(AuthService::class.java)
+        val authService = edu.cit.ceniza.mobile.network.ApiClient.instance.create(AuthService::class.java)
 
         btnSubmitSignIn.setOnClickListener {
             val emailText = etEmail.text.toString().trim()
@@ -53,20 +48,33 @@ class LoginActivity : AppCompatActivity() {
 
             authService.loginUser(requestPayload).enqueue(object : Callback<LoginResponse> {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
-                    // Re-enable button
                     btnSubmitSignIn.isEnabled = true
                     btnSubmitSignIn.text = "Sign In"
 
                     if (response.isSuccessful) {
-                        val loginData = response.body()
+                        val loginResponse = response.body()
 
-                        Toast.makeText(this@LoginActivity, "Welcome, ${loginData?.fullname ?: "User"}!", Toast.LENGTH_SHORT).show()
+                        if (loginResponse != null) {
+                            val token = loginResponse.token ?: ""
+                            val userId = loginResponse.userId ?: -1L
+                            val firstname = loginResponse.userFirstname ?: ""
+                            val lastname = loginResponse.userLastname ?: ""
+                            val combinedFullName = "$firstname $lastname".trim()
 
-                        val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(this@LoginActivity, "Invalid Email or Password", Toast.LENGTH_SHORT).show()
+                            sessionManager.saveAuthToken(token)
+                            sessionManager.saveUserId(userId)
+
+                            if (combinedFullName.isNotEmpty()) {
+                                sessionManager.saveFullName(combinedFullName)
+                            } else {
+                                val email = loginResponse.userEmail ?: "Resident User"
+                                sessionManager.saveFullName(email)
+                            }
+
+                            val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }
                     }
                 }
 
