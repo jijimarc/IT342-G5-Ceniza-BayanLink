@@ -30,10 +30,11 @@ const NotificationModal = ({ isOpen, onClose }) => {
             if (doc.status === 'READY_FOR_PICKUP' || doc.status === 'REJECTED') {
               alerts.push({
                 id: `doc-${doc.requestId}`,
-                title: doc.status === 'READY_FOR_PICKUP' ? 'Document Ready' : 'Document Rejected',
+                title: doc.documentType,
                 message: doc.status === 'READY_FOR_PICKUP' 
-                  ? `Your request for ${doc.documentType} has been processed!` 
-                  : `Your request for ${doc.documentType} was rejected.`,
+                  ? 'Your document has been processed and is ready.' 
+                  : 'Your document request was declined.',
+                status: doc.status, 
                 type: doc.status === 'READY_FOR_PICKUP' ? 'success' : 'error',
                 date: doc.requestDate
               });
@@ -46,10 +47,11 @@ const NotificationModal = ({ isOpen, onClose }) => {
             if (appt.status === 'APPROVED' || appt.status === 'REJECTED') {
               alerts.push({
                 id: `appt-${appt.appointmentId || appt.id || Math.random()}`,
-                title: appt.status === 'APPROVED' ? 'Appointment Approved' : 'Appointment Rejected',
+                title: 'Appointment Update',
                 message: appt.status === 'APPROVED'
-                  ? `Your appointment is confirmed and scheduled.`
-                  : `Your appointment request was declined.`,
+                  ? 'Your appointment is confirmed and scheduled.'
+                  : 'Your appointment request was declined.',
+                status: appt.status, 
                 type: appt.status === 'APPROVED' ? 'success' : 'error',
                 date: appt.appointmentDate || appt.date || 'Recently'
               });
@@ -77,21 +79,26 @@ const NotificationModal = ({ isOpen, onClose }) => {
         </div>
         <div className="modal-body">
           {isLoading ? (
-            <p style={{ textAlign: 'center', color: '#64748b', padding: '20px' }}>Loading updates...</p>
+            <p className="notification-state-text">Loading updates...</p>
           ) : notifications.length > 0 ? (
             <div className="notification-list">
               {notifications.map(note => (
                 <div key={note.id} className={`notification-card ${note.type}`}>
-                  <strong>{note.title}</strong>
-                  <p>{note.message}</p>
-                  <small>{note.date}</small>
+                  <div className="notification-card-header">
+                    <strong>{note.title}</strong>
+                    <span className={`notification-status-badge ${note.type}`}>
+                      {note.status ? note.status.replaceAll('_', ' ') : ''}
+                    </span>
+                  </div>
+                  <p className="notification-message">{note.message}</p>
+                  <small className="notification-date">{note.date}</small>
                 </div>
               ))}
             </div>
           ) : (
-            <div style={{ textAlign: 'center', padding: '40px 20px', color: '#64748b' }}>
-              <p style={{ margin: '0 0 8px 0', fontWeight: 'bold' }}>No new updates right now.</p>
-              <p style={{ margin: 0, fontSize: '0.85rem' }}>You're all caught up!</p>
+            <div className="notification-empty-state">
+              <p className="notification-empty-title">No new updates right now.</p>
+              <p className="notification-empty-subtitle">You're all caught up!</p>
             </div>
           )}
         </div>

@@ -307,3 +307,13 @@ input:checked + .slider:before {
   padding: 16px;
   vertical-align: middle;
 }
+.delete{
+  background: transparent;
+  border: none;
+  color: #EF4444;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+}

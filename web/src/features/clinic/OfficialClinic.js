@@ -147,6 +147,27 @@ const OfficialClinic = () => {
       console.error("Error adding service:", error);
       setToast({ message: 'Network error occurred.', type: 'error' });
     }
+  };  
+
+  const handleDeleteService = async (id) => {
+    const originalServices = [...services];
+    setServices(services.filter(svc => svc.id !== id));
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/clinic-services/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        setToast({ message: 'Service deleted permanently.', type: 'success' });
+      } else {
+        throw new Error("Failed to delete");
+      }
+    } catch (error) {
+      setServices(originalServices);
+      setToast({ message: 'Failed to delete service.', type: 'error' });
+    }
   };
 
   return (
@@ -227,14 +248,30 @@ const OfficialClinic = () => {
                           {svc.serviceName}
                         </span>
                       </div>
-                      <label className="switch">
-                        <input 
-                          type="checkbox" 
-                          checked={currentStatus} 
-                          onChange={() => handleToggleService(svc.id, currentStatus)} 
-                        />
-                        <span className="slider round"></span>
-                      </label>
+                      
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <label className="switch">
+                          <input 
+                            type="checkbox" 
+                            checked={currentStatus} 
+                            onChange={() => handleToggleService(svc.id, currentStatus)} 
+                          />
+                          <span className="slider round"></span>
+                        </label>
+
+                        <button 
+                          type="button" 
+                          onClick={() => {
+                            if (window.confirm(`Are you sure you want to delete "${svc.serviceName}"?`)) {
+                              handleDeleteService(svc.id);
+                            }
+                          }}
+                          className="delete"
+                          title="Delete service permanently"
+                        >
+                          &times;
+                        </button>
+                      </div>
                     </div>
                   );
                 })}

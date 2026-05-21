@@ -19,6 +19,7 @@ const Sidebar = ({ onLogout }) => {
   const isAdmin = user?.role === 'Admin';
   const isResident = user?.role === 'Resident'; 
   const [hasUnread, setHasUnread] = useState(false);
+  const [currentAlertCount, setCurrentAlertCount] = useState(0);
   const [toast, setToast] = useState({ message: '', type: '' });
   const [isNotificationOpen, setIsNotificationOpen] = useState(false); 
   const navigate = useNavigate();
@@ -26,17 +27,31 @@ const Sidebar = ({ onLogout }) => {
   useEffect(() => {
     if (!user || user.isGuest || !token || !isResident) return;
 
-    fetch(`${API_BASE_URL}/api/documents/user/${user.userId}`, {
+    const fetchDocs = fetch(`${API_BASE_URL}/api/documents/user/${user.userId}`, {
       headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(res => res.json())
-    .then(data => {
-      const unreadAlerts = data.some(doc => 
-        doc.status === 'READY_FOR_PICKUP' || doc.status === 'REJECTED'
-      );
-      setHasUnread(unreadAlerts);
-    })
-    .catch(err => console.error("Error updating sidebar badge:", err));
+    }).then(res => res.ok ? res.json() : []);
+
+    const fetchAppts = fetch(`${API_BASE_URL}/api/appointments/user/${user.userId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    }).then(res => res.ok ? res.json() : []);
+
+    Promise.all([fetchDocs, fetchAppts])
+      .then(([docsData, apptsData]) => {
+        let totalAlerts = 0;
+
+        if (Array.isArray(docsData)) {
+          totalAlerts += docsData.filter(doc => doc.status === 'READY_FOR_PICKUP' || doc.status === 'REJECTED').length;
+        }
+        if (Array.isArray(apptsData)) {
+          totalAlerts += apptsData.filter(appt => appt.status === 'APPROVED' || appt.status === 'REJECTED').length;
+        }
+
+        setCurrentAlertCount(totalAlerts);
+        const viewedCount = parseInt(localStorage.getItem(`viewedAlerts_${user.userId}`) || '0', 10);
+
+        setHasUnread(totalAlerts > viewedCount);
+      })
+      .catch(err => console.error("Error updating sidebar badge:", err));
   }, [user, token, isResident]);
 
   const handleStandardizedLogout = (e) => {
@@ -46,6 +61,12 @@ const Sidebar = ({ onLogout }) => {
       logout();
       navigate('/login');
     }, 1000);
+  };
+
+  const handleOpenNotifications = () => {
+    setIsNotificationOpen(true);
+    setHasUnread(false);
+    localStorage.setItem(`viewedAlerts_${user.userId}`, currentAlertCount.toString());
   };
 
   return (
@@ -107,10 +128,7 @@ const Sidebar = ({ onLogout }) => {
                 {isResident && (
                   <div 
                     className="nav-item" 
-                    onClick={() => {
-                      setIsNotificationOpen(true);
-                      setHasUnread(false);
-                    }} 
+                    onClick={handleOpenNotifications} 
                     style={{ cursor: 'pointer', position: 'relative' }}
                   >
                     <BellIcon />

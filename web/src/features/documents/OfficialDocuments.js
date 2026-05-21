@@ -67,6 +67,8 @@ const OfficialDocuments = () => {
   };
 
   const handleGenerateDocument = async (id) => {
+    setToast({ message: "Generating print preview...", type: "info" });
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/documents/${id}/process`, {
         method: 'POST',
@@ -82,8 +84,8 @@ const OfficialDocuments = () => {
         newWindow.document.write(htmlString);
         newWindow.document.close();
 
-        setToast({ message: `Document ${id} Generated successfully!`, type: 'success' });
-        setSelectedDoc(null);
+        setToast({ message: `Document #${id} generated successfully!`, type: 'success' });
+        setSelectedDoc(null); 
         fetchAllDocuments(); 
       } else {
         const errorText = await response.text();
@@ -91,7 +93,7 @@ const OfficialDocuments = () => {
       }
     } catch (error) {
       console.error("Error generating document:", error);
-      setToast({ message: 'Network error occurred.', type: 'error' });
+      setToast({ message: 'Network error or deployment timeout occurred.', type: 'error' });
     }
   };
 

@@ -323,7 +323,19 @@ const DocumentsPage = () => {
               <p><strong>ID Provided:</strong> {selectedDoc.validIdType || 'Not specified'}</p>
               <p><strong>Purpose:</strong> {selectedDoc.purpose || 'Not specified'}</p>
               <p><strong>Urgency:</strong> {selectedDoc.urgency || 'Standard'}</p>
-              <p><strong>Status:</strong> <span className="status-badge">{selectedDoc.status || 'Pending'}</span></p>
+              <p>
+                <strong>Status:</strong>{' '}
+                <span style={{ 
+                  fontWeight: 'bold',
+                  color: selectedDoc.status === 'REJECTED' 
+                    ? '#ef4444' 
+                    : (selectedDoc.status === 'READY_FOR_PICKUP' || selectedDoc.status === 'APPROVED') 
+                      ? '#16a34a' 
+                      : '#f59e0b'
+                }}>
+                  {selectedDoc.status ? selectedDoc.status.replaceAll('_', ' ') : 'UNKNOWN'}
+                </span>
+              </p>
               
               <div className="fee-container">
                 <p className="fee-label">Estimated Fee</p>

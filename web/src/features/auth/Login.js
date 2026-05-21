@@ -78,27 +78,37 @@ const Login = () => {
           <form className="auth-form" onSubmit={handleLogin}>
             <div className="input-group">
               <label>Email Address</label>
-              <input 
-                className="auth-input" 
-                type="email" 
-                value={userEmail}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@company.com" 
-                required
-              />
+                <input 
+                  className="auth-input" 
+                  type="email" 
+                  value={userEmail}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (/^[a-zA-Z0-9@._-]*$/.test(val) && val.length <= 150) {
+                      setEmail(val);
+                    }
+                  }}
+                  placeholder="name@company.com" 
+                  required
+                />
             </div>
             
             <div className="input-group">
               <label>Password</label>
               <div className="password-input-wrapper">
-                <input 
-                  className="auth-input" 
-                  type={showPassword ? "text" : "password"} 
-                  value={userPassword}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="*********" 
-                  required
-                />
+                  <input 
+                    className="auth-input" 
+                    type={showPassword ? "text" : "password"} 
+                    value={userPassword}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (!val.includes(' ') && val.length <= 32) {
+                        setPassword(val);
+                      }
+                    }}
+                    placeholder="*********" 
+                    required
+                  />
                 <button 
                   type="button" 
                   className="password-toggle" 

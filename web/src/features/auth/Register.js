@@ -33,7 +33,28 @@ const Register = () => {
   });
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'userFirstName' || name === 'userLastName') {
+      const lettersOnly = /^[a-zA-Z\s]*$/;
+      if (!lettersOnly.test(value) || value.length > 50) {
+        return; 
+      }
+    }
+
+    if (name === 'userEmail') {
+      const basicEmailChars = /^[a-zA-Z0-9@._-]*$/;
+      if (!basicEmailChars.test(value) || value.length > 150) {
+        return; 
+      }
+    }
+
+    if (name === 'userPassword' || name === 'confirmPassword') {
+      if (value.includes(' ') || value.length > 32) {
+        return; 
+      }
+    }
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleRegister = async (e) => {
@@ -105,24 +126,29 @@ const Register = () => {
             </div>
             <div className="input-group">
               <label>First Name</label>
-              <input 
-                name="userFirstName"
-                type="name" 
-                className="auth-input"
-                onChange={handleChange}
-                placeholder="Juan"
-                required 
+                <input 
+                  name="userFirstName"
+                  type="text" 
+                  pattern="[A-Za-z\s]*"
+                  value={formData.userFirstName || ''} 
+                  className="auth-input"
+                  onChange={handleChange}
+                  placeholder="Juan"
+                  required 
               />
-            </div><div className="input-group">
+            </div>
+            <div className="input-group">
               <label>Last Name</label>
-              <input 
-                name="userLastName"
-                type="name" 
-                className="auth-input"
-                onChange={handleChange}
-                placeholder="Dela Cruz"
-                required 
-              />
+                <input 
+                  name="userLastName"
+                  type="text" 
+                  pattern="[A-Za-z\s]*"
+                  value={formData.userLastName || ''} 
+                  className="auth-input"
+                  onChange={handleChange}
+                  placeholder="Dela Cruz"
+                  required 
+                />
             </div>
             <div className="input-group">
               <label>Password</label>

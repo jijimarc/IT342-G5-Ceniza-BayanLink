@@ -92,7 +92,7 @@ const Profile = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, token]);
 
-  const handleImageChange = (e) => {
+   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
@@ -109,7 +109,30 @@ const Profile = () => {
   };
 
   const handleChange = (e) => {
-    setTempData({ ...tempData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    if (name === 'userFirstname' || name === 'userMiddlename' || name === 'userLastname') {
+      const lettersOnly = /^[a-zA-Z\s]*$/;
+      if (!lettersOnly.test(value)) {
+        return; 
+      }
+    }
+
+    if (name === 'contactNumber') {
+      const numbersOnly = /^[0-9]*$/;
+      if (!numbersOnly.test(value) || value.length > 11) {
+        return;
+      }
+    }
+
+    if (name === 'occupation') {
+      const safeText = /^[a-zA-Z0-9\s,.-]*$/;
+      if (!safeText.test(value)) {
+        return; 
+      }
+    }
+
+    setTempData({ ...tempData, [name]: value });
   };
 
   useEffect(() => {
@@ -206,15 +229,39 @@ const Profile = () => {
               <div className="form-row split">
                 <div className="input-group">
                   <label>First Name</label>
-                  <input name="userFirstname" disabled={!isEditing} value={tempData.userFirstname} onChange={handleChange} className={!isEditing ? "read-only-view" : ""} />
+                  <input 
+                    type="text"
+                    pattern="[A-Za-z\s]*" 
+                    name="userFirstname" 
+                    disabled={!isEditing} 
+                    value={tempData.userFirstname} 
+                    onChange={handleChange} 
+                    className={!isEditing ? "read-only-view" : ""} 
+                  />
                 </div>
                 <div className="input-group">
                   <label>Middle Name</label>
-                  <input name="userMiddlename" disabled={!isEditing} value={tempData.userMiddlename} onChange={handleChange} className={!isEditing ? "read-only-view" : ""} />
+                  <input 
+                    type="text"
+                    pattern="[A-Za-z\s]*" 
+                    name="userMiddlename" 
+                    disabled={!isEditing} 
+                    value={tempData.userMiddlename} 
+                    onChange={handleChange} 
+                    className={!isEditing ? "read-only-view" : ""} 
+                  />
                 </div>
                 <div className="input-group">
                   <label>Last Name</label>
-                  <input name="userLastname" disabled={!isEditing} value={tempData.userLastname} onChange={handleChange} className={!isEditing ? "read-only-view" : ""} />
+                  <input 
+                    type="text"
+                    pattern="[A-Za-z\s]*"
+                    name="userLastname" 
+                    disabled={!isEditing} 
+                    value={tempData.userLastname} 
+                    onChange={handleChange} 
+                    className={!isEditing ? "read-only-view" : ""} 
+                  />
                 </div>
               </div>
 
@@ -225,7 +272,15 @@ const Profile = () => {
                 </div>
                 <div className="input-group">
                   <label>Contact Number</label>
-                  <input name="contactNumber" disabled={!isEditing} value={tempData.contactNumber} onChange={handleChange} className={!isEditing ? "read-only-view" : ""} placeholder="e.g., 09123456789" />
+                  <input 
+                    type="tel" 
+                    name="contactNumber" 
+                    disabled={!isEditing} 
+                    value={tempData.contactNumber} 
+                    onChange={handleChange} 
+                    className={!isEditing ? "read-only-view" : ""} 
+                    placeholder="e.g., 09123456789" 
+                  />
                 </div>
               </div>
 
