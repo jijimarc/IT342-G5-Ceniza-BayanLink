@@ -55,7 +55,7 @@ const OfficialDocuments = () => {
           message: `Request ${id} marked as ${newStatus}.`, 
           type: newStatus === 'REJECTED' ? 'error' : 'success' 
         });
-        setSelectedDoc(null);-
+        setSelectedDoc(null);
         setRefreshTrigger(prev => prev + 1);
       } else {
         const errorText = await response.text();
