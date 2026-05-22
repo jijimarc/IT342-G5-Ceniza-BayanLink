@@ -17,6 +17,8 @@ const DocumentsPage = () => {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const displayName = user?.isGuest ? "Guest User" : (user?.fullname || user?.email || "User");
   const [historyDocuments, setHistoryDocuments] = useState([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   const getEstimatedFee = (urgency) => {
     switch (urgency) {
       case 'Rush': return 150;
@@ -54,7 +56,7 @@ const DocumentsPage = () => {
       }
     };
     fetchDocuments();
-  }, [user, token]);
+  }, [user, token, refreshTrigger]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -77,7 +79,8 @@ const DocumentsPage = () => {
       fullName: user?.fullname || '',
       documentType: '',
       validId: '',
-      purpose: ''
+      purpose: '',
+      urgencyLevel: 'Standard'
     });
     setIdImage(null); 
     const fileInput = document.querySelector('input[type="file"]');
@@ -111,12 +114,9 @@ const DocumentsPage = () => {
       });
 
       if (response.ok) {
-        const newDoc = await response.json();
         setToast({ message: 'Document request submitted successfully!', type: 'success' });
-        
-        setPendingDocuments(prev => [...prev, newDoc]);
-        
         handleClear();
+        setRefreshTrigger(prev => prev + 1);
       } else {
         const errorMessage = await response.text(); 
         console.error("Backend Error Details:", errorMessage);

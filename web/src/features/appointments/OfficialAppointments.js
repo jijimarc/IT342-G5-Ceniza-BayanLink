@@ -17,6 +17,7 @@ const OfficialAppointments = () => {
   const [captainSchedule, setCaptainSchedule] = useState([]);
   const [adminStaffList, setAdminStaffList] = useState([]);
   const [isLoadingStaff, setIsLoadingStaff] = useState(true);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const fetchSchedule = useCallback(async () => {
     if (!token) return;
@@ -38,6 +39,7 @@ const OfficialAppointments = () => {
       console.error("Failed to fetch schedule:", error);
     }
   }, [token, selectedDate]);
+
   const fetchAdminStaff = useCallback(async () => {
     if (!token) return;
     try {
@@ -74,7 +76,7 @@ const OfficialAppointments = () => {
   useEffect(() => {
     fetchSchedule();
     fetchAdminStaff();
-  }, [fetchSchedule, fetchAdminStaff]);
+  }, [fetchSchedule, fetchAdminStaff, refreshTrigger]);
 
   const handleStatusUpdate = async (appointmentId, newStatus) => {
     if (newStatus === 'PENDING') return; 
@@ -90,7 +92,7 @@ const OfficialAppointments = () => {
 
       if (response.ok) {
         setToast({ message: `Appointment status updated to ${newStatus.replace('_', '-')}`, type: 'success' });
-        fetchSchedule(); 
+        setRefreshTrigger(prev => prev + 1);
       } else {
         const errorText = await response.text();
         setToast({ message: `Failed to update status: ${errorText}`, type: 'error' });
@@ -115,6 +117,7 @@ const OfficialAppointments = () => {
 
       if (response.ok) {
         setToast({ message: 'Office availability updated.', type: 'success' });
+        setRefreshTrigger(prev => prev + 1);
       } else {
         setAdminStaffList(adminStaffList.map(staff => 
           staff.id === id ? { ...staff, isPresent: currentStatus } : staff
@@ -240,7 +243,7 @@ const OfficialAppointments = () => {
             </div>
           </div>
 
-          <div className="dashboard-card">
+          <div className="dashboard-card" style={{ marginBottom: '24px' }}>
             <h3 className="card-title">Captain Counseling & Meetings</h3>
             <div className="table-responsive">
               <table className="official-table">

@@ -14,7 +14,8 @@ const OfficialDocuments = () => {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const [documentRequests, setDocumentRequests] = useState([]); 
   const [historyRequests, setHistoryRequests] = useState([]); 
-  
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
   const fetchAllDocuments = useCallback(() => {
     if (!token) return;
     fetch(`${API_BASE_URL}/api/documents/all`, {
@@ -33,7 +34,7 @@ const OfficialDocuments = () => {
 
   useEffect(() => {
     fetchAllDocuments();
-  }, [token, fetchAllDocuments]);
+  }, [token, fetchAllDocuments, refreshTrigger]); 
   
   const handleReviewClick = (doc) => {
     setSelectedDoc(doc);
@@ -54,8 +55,8 @@ const OfficialDocuments = () => {
           message: `Request ${id} marked as ${newStatus}.`, 
           type: newStatus === 'REJECTED' ? 'error' : 'success' 
         });
-        setSelectedDoc(null);
-        fetchAllDocuments();
+        setSelectedDoc(null);-
+        setRefreshTrigger(prev => prev + 1);
       } else {
         const errorText = await response.text();
         setToast({ message: `Failed to update status: ${errorText}`, type: 'error' });
@@ -86,7 +87,7 @@ const OfficialDocuments = () => {
 
         setToast({ message: `Document #${id} generated successfully!`, type: 'success' });
         setSelectedDoc(null); 
-        fetchAllDocuments(); 
+        setRefreshTrigger(prev => prev + 1);
       } else {
         const errorText = await response.text();
         setToast({ message: `Failed to generate: ${errorText}`, type: 'error' });

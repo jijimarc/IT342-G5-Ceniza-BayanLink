@@ -11,13 +11,12 @@ const Dashboard = () => {
   const { user, token } = useAuth(); 
   const [toast, setToast] = useState({ message: '', type: '' }); 
   const displayName = user?.isGuest ? "Guest User" : (user?.fullname || "User");
-
   const [announcements, setAnnouncements] = useState([]);
   const [staffPresent, setStaffPresent] = useState([]);
   const [services, setServices] = useState([]); 
-  
   const [pendingDocuments, setPendingDocuments] = useState([]);
   const [pendingAppointments, setPendingAppointments] = useState([]);
+  const [refreshKey] = useState(0);
 
   useEffect(() => {
     if (!token || user?.isGuest) return;
@@ -85,7 +84,8 @@ const Dashboard = () => {
         })
         .catch(err => console.error("Error fetching appointments:", err));
     }
-  }, [token, user]);
+  }, [token, user, refreshKey]);
+  
   return (
     <div className="dashboard-wrapper">
       <Sidebar />

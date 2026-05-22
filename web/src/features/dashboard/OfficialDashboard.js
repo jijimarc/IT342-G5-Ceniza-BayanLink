@@ -20,6 +20,7 @@ const OfficialDashboard = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAnnouncementTitle, setNewAnnouncementTitle] = useState('');
   const [newAnnouncementContent, setNewAnnouncementContent] = useState('');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const fetchAnnouncements = useCallback(() => {
     fetch(`${API_BASE_URL}/api/announcements`, {
@@ -84,7 +85,7 @@ const OfficialDashboard = () => {
       .then(data => setTodayAppointmentsCount(data.length))
       .catch(err => console.error("Error fetching appointments count:", err));
 
-  }, [token, fetchAnnouncements]); 
+  }, [token, fetchAnnouncements, refreshTrigger]);
 
   const handlePostAnnouncement = async (e) => {
     e.preventDefault();
@@ -109,7 +110,7 @@ const OfficialDashboard = () => {
         setNewAnnouncementContent('');
         setIsModalOpen(false);
         setToast({ message: 'Announcement posted to the community!', type: 'success' });
-        fetchAnnouncements(); 
+        setRefreshTrigger(prev => prev + 1);
       } else {
         const errorText = await response.text();
         setToast({ message: `Failed to post: ${errorText}`, type: 'error' });

@@ -13,11 +13,11 @@ const OfficialClinic = () => {
   const { user, token } = useAuth(); 
   const [toast, setToast] = useState({ message: '', type: '' });
   const displayName = user?.fullname || "Official User";
-  
   const [staffList, setStaffList] = useState([]);
   const [isLoadingStaff, setIsLoadingStaff] = useState(true);
   const [services, setServices] = useState([]);
   const [newService, setNewService] = useState('');
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     const fetchHealthStaff = async () => {
@@ -69,7 +69,7 @@ const OfficialClinic = () => {
       fetchHealthStaff();
       fetchServices(); 
     }
-  }, [token]);
+  }, [token, refreshTrigger]);
 
   const handleToggleStaff = async (id, currentStatus) => {
     const newStatus = !currentStatus; 
@@ -85,6 +85,7 @@ const OfficialClinic = () => {
 
       if (response.ok) {
         setToast({ message: 'Staff availability saved.', type: 'success' });
+        setRefreshTrigger(prev => prev + 1);
       } else {
         setStaffList(staffList.map(staff => 
           staff.id === id ? { ...staff, isPresent: currentStatus } : staff
@@ -110,6 +111,7 @@ const OfficialClinic = () => {
       });
       if (response.ok) {
         setToast({ message: 'Service status updated.', type: 'success' });
+        setRefreshTrigger(prev => prev + 1);
       } else {
         throw new Error("Failed to toggle");
       }
@@ -136,10 +138,9 @@ const OfficialClinic = () => {
       });
 
       if (response.ok) {
-        const addedService = await response.json();
-        setServices([...services, addedService]); 
         setNewService('');
         setToast({ message: 'New service added successfully.', type: 'success' });
+        setRefreshTrigger(prev => prev + 1);
       } else {
         setToast({ message: 'Failed to add service.', type: 'error' });
       }
@@ -161,6 +162,7 @@ const OfficialClinic = () => {
 
       if (response.ok) {
         setToast({ message: 'Service deleted permanently.', type: 'success' });
+        setRefreshTrigger(prev => prev + 1);
       } else {
         throw new Error("Failed to delete");
       }

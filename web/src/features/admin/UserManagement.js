@@ -21,6 +21,7 @@ const UserManagement = () => {
     confirmPassword: '',
     role: 'OFFICIAL'
   });
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchUsers = useCallback(async (role) => {
     setLoading(true);
@@ -44,7 +45,7 @@ const UserManagement = () => {
 
   useEffect(() => {
     fetchUsers(activeTab);
-  }, [activeTab, fetchUsers]);
+  }, [activeTab, fetchUsers, refreshKey]); 
 
   const handleDelete = async (userId, name) => {
     if (!window.confirm(`Are you sure you want to permanently delete ${name}'s account?`)) return;
@@ -56,7 +57,7 @@ const UserManagement = () => {
       });
       if (response.ok) {
         setToast({ message: "Account deleted successfully", type: "success" });
-        setUsers(users.filter(u => u.userId !== userId));
+        setRefreshKey(prev => prev + 1);
       } else {
         setToast({ message: "Failed to delete account", type: "error" });
       }
@@ -91,7 +92,7 @@ const UserManagement = () => {
         setToast({ message: `${formData.role} created successfully!`, type: "success" });
         setShowAddModal(false);
         setFormData({ ...formData, userFirstName: '', userLastName: '', userEmail: '', userPassword: '', confirmPassword: '' });
-        if (activeTab === formData.role) fetchUsers(activeTab);
+        setRefreshKey(prev => prev + 1);
       } else {
         const errorData = await response.json();
         setToast({ message: errorData.message || "Failed to create account", type: "error" });

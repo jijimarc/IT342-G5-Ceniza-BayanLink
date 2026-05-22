@@ -22,6 +22,7 @@ const AppointmentsPage = () => {
   });
   const morningSlots = ["08:00 AM", "09:00 AM", "10:00 AM", "11:00 AM"];
   const afternoonSlots = ["01:00 PM", "02:00 PM", "03:00 PM", "04:00 PM"];
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     if (formData.service || formData.date || formData.timeSlot) {
@@ -77,6 +78,7 @@ const AppointmentsPage = () => {
         const savedAppointment = await response.json();
         setToast({ message: `Appointment booked! Ref: ${savedAppointment.referenceNumber}`, type: 'success' });
         handleClear();
+        setRefreshKey(prev => prev + 1);
       } else {
         const errorMessage = await response.text();
         setToast({ message: `Failed to book: ${errorMessage}`, type: 'error' });
@@ -89,7 +91,7 @@ const AppointmentsPage = () => {
 
   return (
     <div className="dashboard-wrapper">
-      <Sidebar />
+      <Sidebar key={refreshKey} />
       <main className="main-content">
         <header className="dashboard-header">
           <div className="header-title">

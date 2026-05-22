@@ -10,13 +10,12 @@ const AdminDashboard = () => {
   const { user, token } = useAuth();
   const [toast, setToast] = useState({ message: '', type: '' });
   const displayName = user?.fullname || "System Admin";
-  
   const [announcements, setAnnouncements] = useState([]);
   const [stats, setStats] = useState({ residents: 0, officials: 0 });
-  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newAnnouncementTitle, setNewAnnouncementTitle] = useState('');
   const [newAnnouncementContent, setNewAnnouncementContent] = useState('');
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const fetchAnnouncements = useCallback(() => {
     fetch(`${API_BASE_URL}/api/announcements`, {
@@ -29,6 +28,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (!token) return;
+  
     fetchAnnouncements();
 
     const fetchStats = async () => {
@@ -49,7 +49,7 @@ const AdminDashboard = () => {
       }
     };
     fetchStats();
-  }, [token, fetchAnnouncements]);
+  }, [token, fetchAnnouncements, refreshKey]); 
 
   const handlePostAnnouncement = async (e) => {
     e.preventDefault();
@@ -74,7 +74,8 @@ const AdminDashboard = () => {
         setNewAnnouncementContent('');
         setIsModalOpen(false);
         setToast({ message: 'System Notice posted!', type: 'success' });
-        fetchAnnouncements(); 
+
+        setRefreshKey(prev => prev + 1);
       }
     } catch (error) {
       setToast({ message: 'Network error occurred.', type: 'error' });
